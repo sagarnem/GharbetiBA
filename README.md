@@ -33,16 +33,16 @@ Gharbeti BA is a digital platform designed to help property owners in Nepal mana
 - Python (v3.8+)
 - MySQL server
 
+
 ### Installation
 
-1. Clone the repository
 
+# 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone git@github.com:sagarnem/GharbetiBA.git
 cd gharbeti-ba
 
-2. Setup backend
-
+# 2. Setup backend
 cd backend
 python -m venv venv
 source venv/bin/activate      # On Windows: venv\Scripts\activate
@@ -50,9 +50,9 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 
-3. Setup frontend
 
+# 3. Setup frontend
+```bash
 cd ../frontend
 npm install
 npm run dev
-
