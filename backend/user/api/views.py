@@ -188,6 +188,7 @@ class SocialLoginView(APIView):
 class GoogleLoginAPIView(APIView):
     def post(self, request, *args, **kwargs):
         id_token_str = request.data.get("id_token")
+        role_from_frontend = request.data.get("role", "tenant")
         if not id_token_str:
             return Response({"error": "ID token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -207,8 +208,13 @@ class GoogleLoginAPIView(APIView):
                 return Response({"error": "Email not verified by Google"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Get or create user
-            user, created = User.objects.get_or_create(email=email, defaults={"is_active": True})
-
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    "is_active": True,
+                    "role": role_from_frontend,  # assign role only on create
+                }
+            )
             # Create or update profile
             profile, _ = UserProfile.objects.get_or_create(user=user)
             if name:
@@ -236,6 +242,7 @@ class GoogleLoginAPIView(APIView):
                     "email": user.email,
                     "full_name": profile.full_name,
                     "photo": profile.photo.url if profile.photo else None,
+                    "role": user.role,
                 }
             })
 
