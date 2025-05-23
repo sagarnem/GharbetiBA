@@ -8,8 +8,21 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import make_password
 from rest_framework.parsers import MultiPartParser, FormParser
+from social_django.utils import load_strategy, load_backend
+from social_core.backends.oauth import BaseOAuth2
+from social_core.exceptions import AuthException
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+import logging
+import os
+from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
+import requests
+User = get_user_model()
 
-
+logger = logging.getLogger(__name__)
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -137,3 +150,94 @@ class UpdateUserProfileView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user.profile
+
+class SocialLoginView(APIView):
+    def post(self, request, *args, **kwargs):
+        provider = request.data.get("provider")
+        access_token = request.data.get("access_token")
+
+        if not provider or not access_token:
+            return Response({"error": "provider and access_token are required"}, status=400)
+
+        strategy = load_strategy(request)
+        try:
+            backend = load_backend(strategy=strategy, name=provider, redirect_uri=None)
+        except Exception as e:
+            logger.error(f"Failed to load backend {provider}: {e}")
+            return Response({"error": f"Invalid provider: {provider}"}, status=400)
+
+        try:
+            user = backend.do_auth(access_token)
+        except AuthException as e:
+            logger.error(f"Authentication failed for provider {provider}: {e}")
+            return Response({"error": "Invalid token"}, status=400)
+        except Exception as e:
+            logger.error(f"Unexpected error during auth: {e}")
+            return Response({"error": "Authentication error"}, status=500)
+
+        if user and user.is_active:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "message": "Login successful",
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            })
+
+        return Response({"error": "Authentication failed"}, status=400)
+    
+class GoogleLoginAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        id_token_str = request.data.get("id_token")
+        if not id_token_str:
+            return Response({"error": "ID token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Verify token with Google
+            idinfo = id_token.verify_oauth2_token(id_token_str, google_requests.Request(), os.getenv("GOOGLE_CLIENT_ID"))
+
+            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise ValueError('Wrong issuer.')
+
+            email = idinfo.get('email')
+            name = idinfo.get('name')
+            picture_url = idinfo.get('picture')
+            email_verified = idinfo.get('email_verified', False)
+
+            if not email or not email_verified:
+                return Response({"error": "Email not verified by Google"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Get or create user
+            user, created = User.objects.get_or_create(email=email, defaults={"is_active": True})
+
+            # Create or update profile
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if name:
+                profile.full_name = name
+            if picture_url and not profile.photo:
+                try:
+                    img_temp = NamedTemporaryFile(delete=True)
+                    img_response = requests.get(picture_url)
+                    img_temp.write(img_response.content)
+                    img_temp.flush()
+                    file_name = f"{user.email.replace('@', '_')}_google.jpg"
+                    profile.photo.save(file_name, File(img_temp), save=False)
+                except Exception as e:
+                    print(f"Image download failed: {e}")
+
+            profile.save()
+
+            # Issue JWT
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "message": "Login successful",
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "user": {
+                    "email": user.email,
+                    "full_name": profile.full_name,
+                    "photo": profile.photo.url if profile.photo else None,
+                }
+            })
+
+        except ValueError as e:
+            return Response({"error": "Invalid ID token", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)

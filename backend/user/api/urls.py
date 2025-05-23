@@ -11,4 +11,6 @@ urlpatterns = [
     path('profile/create/', CreateUserProfileView.as_view()),
     path('profile/me/', RetrieveUserProfileView.as_view()),
     path('profile/update/', UpdateUserProfileView.as_view()),
+    path('auth/social/', SocialLoginView.as_view(), name='social-login'),
+    path('auth/social/google/', GoogleLoginAPIView.as_view(), name='google-login'),
 ]
