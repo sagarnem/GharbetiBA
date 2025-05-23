@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { ChangePasswordFormData, ApiResponse } from '@/types/auth';
 import { useAuth } from '@/context/AuthContext';
+import { useWatch } from 'react-hook-form';
 
 export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
@@ -15,14 +16,16 @@ export default function ChangePassword() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ChangePasswordFormData>();
-  const { logout } = useAuth();
+    control,
+  } = useForm<ChangePasswordFormData & { confirm_password: string }>();
+
+  const newPassword = useWatch({ control, name: 'new_password' });
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     setLoading(true);
     try {
       await axios.post<ApiResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/change-password/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/change-password/`,
         data,
         {
           headers: {
@@ -75,9 +78,8 @@ export default function ChangePassword() {
                   {...register('old_password', {
                     required: 'Current password is required',
                   })}
-                  className={`block w-full pl-10 pr-3 py-2 border ${
-                    errors.old_password ? 'border-red-300' : 'border-gray-300'
-                  } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  className={`block w-full pl-10 pr-3 py-2 border ${errors.old_password ? 'border-red-300' : 'border-gray-300'
+                    } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                 />
               </div>
               {errors.old_password && (
@@ -109,9 +111,8 @@ export default function ChangePassword() {
                       message: 'Password must be at least 8 characters',
                     },
                   })}
-                  className={`block w-full pl-10 pr-3 py-2 border ${
-                    errors.new_password ? 'border-red-300' : 'border-gray-300'
-                  } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  className={`block w-full pl-10 pr-3 py-2 border ${errors.new_password ? 'border-red-300' : 'border-gray-300'
+                    } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                 />
               </div>
               {errors.new_password && (
@@ -122,12 +123,43 @@ export default function ChangePassword() {
             </div>
 
             <div>
+              <label
+                htmlFor="confirm_password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Confirm New Password
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <LockClosedIcon className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="confirm_password"
+                  type="password"
+                  autoComplete="new-password"
+                  {...register('confirm_password', {
+                    required: 'Please confirm your new password',
+                    validate: (value) =>
+                      value === newPassword || 'Passwords do not match',
+                  })}
+                  className={`block w-full pl-10 pr-3 py-2 border ${errors.confirm_password ? 'border-red-300' : 'border-gray-300'
+                    } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                />
+              </div>
+              {errors.confirm_password && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.confirm_password.message}
+                </p>
+              )}
+            </div>
+
+
+            <div>
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                  loading ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
+                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
               >
                 {loading ? 'Changing...' : 'Change Password'}
               </button>

@@ -8,4 +8,7 @@ urlpatterns = [
     path("request-reset/", RequestPasswordResetView.as_view()),
     path("confirm-reset/", ConfirmPasswordResetView.as_view()),
     path("change-password/", ChangePasswordView.as_view()),
+    path('profile/create/', CreateUserProfileView.as_view()),
+    path('profile/me/', RetrieveUserProfileView.as_view()),
+    path('profile/update/', UpdateUserProfileView.as_view()),
 ]

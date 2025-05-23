@@ -35,3 +35,14 @@ export interface ApiResponse {
   access?: string;
   refresh?: string;
 }
+
+export interface UserProfile {
+  id?: number;
+  full_name: string;
+  phone_number_1: string;
+  phone_number_2: string;
+  date_of_birth: string | null;
+  location: string;
+  photo?: File | string | null;
+  bio: string;
+}
