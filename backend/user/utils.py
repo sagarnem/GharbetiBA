@@ -13,7 +13,7 @@ def send_otp_email(user_or_email, purpose):
         email = user_or_email.email
         user = user_or_email
 
-    OTP.objects.create(user=user, email=email, code=code, purpose=purpose)
+    OTP.objects.create(email=email, code=code, purpose=purpose)
 
     send_mail(
         subject="Your OTP Code",

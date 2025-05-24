@@ -22,14 +22,11 @@ export default function ForgotPassword() {
     setLoading(true);
     try {
       await axios.post<ApiResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/request-reset/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/request-reset/`,
         data
       );
       toast.success('OTP sent to your email for password reset');
-      router.push({
-        pathname: '/auth/verify-otp',
-        query: { email: data.email, purpose: 'reset' },
-      });
+      router.push(`/auth/verify-otp?email=${encodeURIComponent(data.email)}&purpose=reset-password`);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(
@@ -90,6 +87,7 @@ export default function ForgotPassword() {
                 </p>
               )}
             </div>
+            
 
             <div>
               <button

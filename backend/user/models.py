@@ -66,13 +66,19 @@ class UserProfile(models.Model):
         return f"Profile of {self.user.email}"
     
 class OTP(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    email = models.EmailField(null=True, blank=True)  # Store email when user not created yet
+    PURPOSE_CHOICES = [
+        ('register', 'Register'),
+        ('reset_password', 'Reset Password'),
+        ('social_login', 'Social Login'),
+    ]
+
+    email = models.EmailField()
     code = models.CharField(max_length=6)
-    purpose = models.CharField(max_length=20)  # 'register' or 'reset'
+    purpose = models.CharField(max_length=20, choices=PURPOSE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
 
     def is_expired(self):
-        return timezone.now() > self.created_at + timedelta(minutes=10)
+        return self.created_at < timezone.now() - timedelta(minutes=10)
+
 

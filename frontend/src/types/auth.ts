@@ -22,6 +22,7 @@ export interface ResetPasswordConfirmFormData {
   email: string;
   code: string;
   new_password: string;
+  confirm_password?: string;
 }
 
 export interface ChangePasswordFormData {

@@ -11,6 +11,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class OTPVerifySerializer(serializers.Serializer):
     email = serializers.EmailField()
     code = serializers.CharField()
+    purpose = serializers.ChoiceField(default="register",choices=['register', 'reset_password', 'social_login'])
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

@@ -50,32 +50,49 @@ class OTPVerifyView(APIView):
         if serializer.is_valid():
             email = serializer.validated_data['email']
             code = serializer.validated_data['code']
+            purpose = serializer.validated_data.get('purpose', 'register')  # default to register
 
-            otp = OTP.objects.filter(email=email, code=code, purpose="register").last()
+            otp = OTP.objects.filter(email=email, code=code, purpose=purpose, is_verified=False).last()
+
             if otp and not otp.is_expired():
-                try:
-                    pending = PendingUser.objects.get(email=email)
+                otp.is_verified = True
+                otp.save()
 
-                    # Create real user now
-                    user = User.objects.create(
-                        email=email,
-                        password=pending.password,  # already hashed
-                        role=pending.role,
-                        is_active=True
-                    )
+                if purpose == 'register':
+                    try:
+                        pending = PendingUser.objects.get(email=email)
+                        user = User.objects.create(
+                            email=email,
+                            password=pending.password,
+                            role=pending.role,
+                            is_active=True,
+                        )
+                        pending.delete()
+                        return Response({"message": "Email verified. Account created."})
+                    except PendingUser.DoesNotExist:
+                        return Response({"error": "No pending registration found."}, status=404)
 
-                    otp.is_verified = True
-                    otp.save()
-                    pending.delete()  # clean up
+                elif purpose == 'reset_password':
+                    return Response({"message": "OTP verified. You can now reset your password."})
 
-                    return Response({"message": "Email verified. Account created."})
+                elif purpose == 'social_login':
+                    try:
+                        user = User.objects.get(email=email)
+                        refresh = RefreshToken.for_user(user)
+                        return Response({
+                            "message": "OTP verified. Logged in via social account.",
+                            "access": str(refresh.access_token),
+                            "refresh": str(refresh),
+                        })
+                    except User.DoesNotExist:
+                        return Response({"error": "User not found."}, status=404)
 
-                except PendingUser.DoesNotExist:
-                    return Response({"error": "No pending registration found."}, status=404)
+                return Response({"message": "OTP verified."})
 
             return Response({"error": "Invalid or expired OTP"}, status=400)
 
         return Response(serializer.errors, status=400)
+
 
 
 class LoginView(APIView):
@@ -95,7 +112,7 @@ class RequestPasswordResetView(APIView):
         serializer = ResetPasswordRequestSerializer(data=request.data)
         if serializer.is_valid():
             user = get_object_or_404(User, email=serializer.validated_data['email'])
-            send_otp_email(user, "reset")
+            send_otp_email(user.email, "reset")
             return Response({"message": "OTP sent for password reset"})
         return Response(serializer.errors, status=400)
 
@@ -103,16 +120,28 @@ class ConfirmPasswordResetView(APIView):
     def post(self, request):
         serializer = ResetPasswordConfirmSerializer(data=request.data)
         if serializer.is_valid():
-            user = get_object_or_404(User, email=serializer.validated_data['email'])
-            otp = OTP.objects.filter(user=user, code=serializer.validated_data['code'], purpose="reset").last()
-            if otp and not otp.is_expired():
-                user.set_password(serializer.validated_data['new_password'])
-                user.save()
-                otp.is_verified = True
-                otp.save()
-                return Response({"message": "Password reset successful"})
+            email = serializer.validated_data['email']
+            code = serializer.validated_data['code']
+            new_password = serializer.validated_data['new_password']
+
+            user = get_object_or_404(User, email=email)
+            otp = OTP.objects.filter(email=user.email, code=code, purpose="reset").last()
+            if otp:
+                print(f"OTP found: {otp}")
+                expired = otp.is_expired()
+                print(f"OTP expired? {expired}")
+                if not expired:
+                    user.set_password(new_password)
+                    user.save()
+                    otp.is_verified = True
+                    otp.save()
+                    return Response({"message": "Password reset successful"})
+                else:
+                    print("OTP is expired.")
             return Response({"error": "Invalid or expired OTP"}, status=400)
+        
         return Response(serializer.errors, status=400)
+
 
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -215,10 +244,17 @@ class GoogleLoginAPIView(APIView):
                     "role": role_from_frontend,  # assign role only on create
                 }
             )
+
+            otp_verified = OTP.objects.filter(email=email, purpose="social_login", is_verified=True).exists()
+            if not otp_verified:
+                send_otp_email(email, "social_login")
             # Create or update profile
             profile, _ = UserProfile.objects.get_or_create(user=user)
             if name:
                 profile.full_name = name
+            birthdate = idinfo.get("birthdate")
+            if birthdate:
+                profile.date_of_birth = birthdate
             if picture_url and not profile.photo:
                 try:
                     img_temp = NamedTemporaryFile(delete=True)

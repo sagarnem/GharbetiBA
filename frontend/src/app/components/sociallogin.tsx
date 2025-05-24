@@ -21,11 +21,18 @@ export default function SocialLogin() {
                 { id_token, role: selectedRole }
             );
 
-            const { access, refresh } = res.data;
-            localStorage.setItem("access_token", access);
-            localStorage.setItem("refresh_token", refresh);
-            toast.success("Logged in with Google");
-            router.push("/dashboard");
+            const data = res.data;
+
+            if (data.otp_required) {
+                // Redirect to OTP verification page or modal
+                router.push(`/auth/verify-otp?email=${data.email}&purpose=social_login`);
+                toast.info("OTP verification required");
+            } else {
+                localStorage.setItem("access_token", data.access);
+                localStorage.setItem("refresh_token", data.refresh);
+                toast.success("Logged in with Google");
+                router.push("/dashboard");
+            }
         } catch (error) {
             console.error(error);
             toast.error("Google login failed");
@@ -36,7 +43,7 @@ export default function SocialLogin() {
         try {
             const { accessToken } = response;
             const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/user/auth/social/facebook/`, // assuming you have this endpoint
+                `${process.env.NEXT_PUBLIC_API_URL}/user/auth/social/facebook/`,
                 {
                     access_token: accessToken,
                     role: selectedRole,
@@ -44,16 +51,23 @@ export default function SocialLogin() {
                 }
             );
 
-            const { access, refresh } = res.data;
-            localStorage.setItem("access_token", access);
-            localStorage.setItem("refresh_token", refresh);
-            toast.success("Logged in with Facebook");
-            router.push("/dashboard");
+            const data = res.data;
+
+            if (data.otp_required) {
+                router.push(`/auth/verify-otp?email=${data.email}&purpose=social_login`);
+                toast.info("OTP verification required");
+            } else {
+                localStorage.setItem("access_token", data.access);
+                localStorage.setItem("refresh_token", data.refresh);
+                toast.success("Logged in with Facebook");
+                router.push("/dashboard");
+            }
         } catch (error) {
             console.error(error);
             toast.error("Facebook login failed");
         }
     };
+
 
     return (
         <div className="max-w-2xl mx-auto p-8 bg-white rounded-2xl shadow-xl text-center space-y-6">
