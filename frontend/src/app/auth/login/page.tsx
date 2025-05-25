@@ -8,6 +8,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import { LoginFormData, ApiResponse } from '@/types/auth';
+import SocialLogin from "../../components/sociallogin";
 
 export default function Login() {
   const router = useRouter();
@@ -146,6 +147,9 @@ export default function Login() {
                 </Link>
               </div>
             </div>
+            <div className="max-w-md mx-auto py-10">
+      <SocialLogin />
+    </div>
 
             <div>
               <button

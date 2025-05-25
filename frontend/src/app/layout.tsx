@@ -4,6 +4,8 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Topbar from "./components/topbar";
+import 'react-toastify/dist/ReactToastify.css';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,7 +43,11 @@ export default function RootLayout({
             Contact: info@gharbetiba.mantracodex.com
           </p>
         </footer>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+        <Topbar/>
+        {children}
         <ToastContainer position="top-right" autoClose={3000} />
+        </GoogleOAuthProvider>
       </body>
     </html>
   );
