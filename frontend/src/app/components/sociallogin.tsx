@@ -92,9 +92,9 @@ export default function SocialLogin() {
                         type="radio"
                         className="form-radio"
                         name="role"
-                        value="property_owner"
-                        checked={selectedRole === "property_owner"}
-                        onChange={() => setSelectedRole("property_owner")}
+                        value="owner"
+                        checked={selectedRole === "owner"}
+                        onChange={() => setSelectedRole("owner")}
                     />
                     <span className="ml-2 text-black font-medium" >Property Owner</span>
                 </label>

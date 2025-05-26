@@ -68,7 +68,7 @@ class UserProfile(models.Model):
 class OTP(models.Model):
     PURPOSE_CHOICES = [
         ('register', 'Register'),
-        ('reset_password', 'Reset Password'),
+        ('reset', 'Reset Password'),
         ('social_login', 'Social Login'),
     ]
 

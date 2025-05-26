@@ -245,9 +245,6 @@ class GoogleLoginAPIView(APIView):
                 }
             )
 
-            otp_verified = OTP.objects.filter(email=email, purpose="social_login", is_verified=True).exists()
-            if not otp_verified:
-                send_otp_email(email, "social_login")
             # Create or update profile
             profile, _ = UserProfile.objects.get_or_create(user=user)
             if name:

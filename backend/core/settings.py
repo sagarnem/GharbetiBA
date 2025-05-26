@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # installed app 
     'user',
+    'post',
 
     # 3rd party apps
     'rest_framework',
@@ -80,6 +81,20 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # or ERROR
+    },
+}
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -108,7 +123,6 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
-    'user.pipeline.require_otp_verification',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
