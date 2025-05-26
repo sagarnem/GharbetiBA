@@ -8,14 +8,19 @@ export default function Topbar() {
   return (
     <div className="bg-white shadow-md p-4 flex justify-between items-center">
       <Link href="/" className="text-xl font-bold text-blue-600">
-        PropertyBook
+        Ghar Beti Ba
       </Link>
       <input
         type="text"
         placeholder="Search..."
         className="border rounded-lg px-3 py-1 w-1/2"
       />
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 text-black">
+<h1>about-us</h1>
+<h1>How it works</h1>
+<h1>Wishlist</h1>
+<h1>login</h1>
+
         <span className="text-gray-800 font-medium">
           {user?.first_name || user?.email}
         </span>
