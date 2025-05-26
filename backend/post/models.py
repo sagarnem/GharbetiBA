@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-
+from multiselectfield import MultiSelectField
 User = settings.AUTH_USER_MODEL
 
 class Post(models.Model):
@@ -13,7 +13,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     rental_term = models.TextField(null=True, blank=True)
-    near_by = models.CharField(max_length=255, blank=True, null=True, choices=[
+    near_by = MultiSelectField(max_length=255, blank=True, null=True, choices=[
         ('school', 'School'),
         ('hospital', 'Hospital'),
         ('market', 'Market'),

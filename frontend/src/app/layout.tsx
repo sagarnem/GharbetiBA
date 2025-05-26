@@ -31,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
         <header className="top-0 sticky z-30">
           <Topbar />
         </header>
@@ -43,9 +44,6 @@ export default function RootLayout({
             Contact: info@gharbetiba.mantracodex.com
           </p>
         </footer>
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-        <Topbar/>
-        {children}
         <ToastContainer position="top-right" autoClose={3000} />
         </GoogleOAuthProvider>
       </body>

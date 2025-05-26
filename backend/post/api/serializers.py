@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from post.models import Post, Comment, Watchlist, PostImage, Amenity
-
+import json
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
 
@@ -23,8 +23,39 @@ class AmenitySerializer(serializers.ModelSerializer):
         model = Amenity
         exclude = ['post']
 
+class MultiSelectFieldSerializer(serializers.Field):
+    def to_representation(self, value):
+        if not value:
+            return []
+
+        if isinstance(value, str):
+            return value.split(',')
+
+        if isinstance(value, (list, tuple)):
+            return list(value)
+
+        raise TypeError(f'Unexpected type for near_by: {type(value)}')
+
+    def to_internal_value(self, data):
+        if isinstance(data, str):
+            try:
+                data = json.loads(data)
+            except json.JSONDecodeError:
+                raise serializers.ValidationError('Expected a list of items or valid JSON string.')
+
+        if not isinstance(data, list):
+            raise serializers.ValidationError('Expected a list of items.')
+
+        valid_choices = dict(self.parent.Meta.model._meta.get_field('near_by').choices)
+        for item in data:
+            if item not in valid_choices:
+                raise serializers.ValidationError(f'Invalid choice: {item}')
+        
+        return ','.join(data)
+
 
 class PostSerializer(serializers.ModelSerializer):
+    near_by = MultiSelectFieldSerializer()
     amenities = AmenitySerializer(required=False)
     comments = CommentSerializer(many=True, read_only=True)
     images = serializers.ListField(
