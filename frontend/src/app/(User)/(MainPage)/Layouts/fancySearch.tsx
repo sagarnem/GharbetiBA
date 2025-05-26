@@ -7,8 +7,10 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import PropertyTypeDropdown from "@/app/components/propertytypedropdown";
+import BudgetDropdown from "@/app/components/budgetdropdown";
 export default function HeroSearchSection() {
+  //  const router = useRouter();
   const baseUrl = "http://localhost:8000";
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
@@ -39,7 +41,7 @@ export default function HeroSearchSection() {
     // fetch(`/api/post/public-posts/?${params.toString()}`).then(...)
   };
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#FFF7ED] via-[#FFE9D0] to-[#FFD8A9] py-20 px-4 text-center">
+    <section className="relative bg-gradient-to-br from-[#FFF7ED] via-[#FFE9D0] to-[#FFD8A9] py-20 px-4 text-center">
       <div className="absolute inset-0 bg-[url('/kathmandu-pattern.svg')] opacity-10 bg-center bg-cover pointer-events-none" />
       <div className="relative z-10 max-w-5xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 leading-tight">
@@ -50,7 +52,7 @@ export default function HeroSearchSection() {
         </p>
 
         {/* Search Bar Container */}
-        <div className="backdrop-blur-md bg-white/90 border border-orange-100 rounded-2xl shadow-xl flex flex-wrap md:flex-nowrap items-center justify-between overflow-hidden transition-all duration-300 ring-1 ring-orange-100 hover:ring-orange-300">
+        <div className="backdrop-blur-md bg-white/90 border border-orange-100 rounded-2xl shadow-xl flex flex-wrap md:flex-nowrap items-center justify-between transition-all duration-300 ring-1 ring-orange-100 hover:ring-orange-300">
 
           {/* Input: Title */}
           <div className="flex items-center gap-2 px-4 py-4 w-full md:w-auto">
@@ -82,30 +84,12 @@ export default function HeroSearchSection() {
           <div className="hidden md:block w-px bg-gray-300 h-6" />
 
           {/* Dropdown: Property Type */}
-          <div className="flex items-center gap-2 px-4 py-4 w-full md:w-auto">
-            <Home className="text-orange-500 w-5 h-5" />
-            <select value={propertyType}
-              onChange={(e) => setPropertyType(e.target.value)} className="bg-transparent text-sm md:text-base text-gray-700 outline-none">
-              <option>Property Type</option>
-              <option>1BHK</option>
-              <option>2BHK</option>
-              <option>Studio</option>
-            </select>
-          </div>
+          <PropertyTypeDropdown value={propertyType} onChange={setPropertyType} />
 
           <div className="hidden md:block w-px bg-gray-300 h-6" />
 
           {/* Dropdown: Budget */}
-          <div className="flex items-center gap-2 px-4 py-4 w-full md:w-auto">
-            <DollarSign className="text-orange-500 w-5 h-5" />
-            <select value={budget}
-              onChange={(e) => setBudget(e.target.value)} className="bg-transparent text-sm md:text-base text-gray-700 outline-none">
-              <option>Budget</option>
-              <option>Below Rs. 10,000</option>
-              <option>Rs. 10,000 - 20,000</option>
-              <option>Above Rs. 20,000</option>
-            </select>
-          </div>
+          <BudgetDropdown value={budget} onChange={setBudget}/> 
 
           {/* Search Button */}
           <button onClick={handleSearch} className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-none md:rounded-r-2xl font-semibold whitespace-nowrap transition-all duration-200">
