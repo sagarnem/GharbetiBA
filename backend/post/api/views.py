@@ -1,5 +1,6 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet, CharFilter, NumberFilter
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from post.models import Post, PostImage, Amenity, Comment, Watchlist
@@ -11,6 +12,25 @@ from post.permissions import IsOwnerOrReadOnly, IsCommentOwnerOrReadOnly, IsOwne
 import logging
 
 logger = logging.getLogger(__name__)
+
+class FrontendPostFilter(FilterSet):
+    title = CharFilter(field_name='title', lookup_expr='icontains')
+    location = CharFilter(field_name='location', lookup_expr='icontains')
+    category = CharFilter(field_name='category', lookup_expr='iexact')
+    min_price = NumberFilter(field_name='price', lookup_expr='gte')
+    max_price = NumberFilter(field_name='price', lookup_expr='lte')
+
+    class Meta:
+        model = Post
+        fields = ['title', 'location', 'category', 'min_price', 'max_price']
+
+
+class FrontendPostViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Post.objects.filter(is_active=True).order_by('-created_at')
+    serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_class = FrontendPostFilter
+    search_fields = ['title', 'location', 'category']
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().select_related('owner','amenities').prefetch_related('comments', 'images').order_by('-created_at')

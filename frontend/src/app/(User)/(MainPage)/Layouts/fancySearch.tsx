@@ -5,8 +5,39 @@ import {
   Home,
   DollarSign,
 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function HeroSearchSection() {
+  const baseUrl = "http://localhost:8000";
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [propertyType, setPropertyType] = useState("");
+  const [budget, setBudget] = useState("");
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    if (title) params.append("title", title);
+    if (location) params.append("location", location);
+    if (propertyType && propertyType !== "Property Type") {
+      params.append("category", propertyType);
+    }
+    if (budget) {
+      if (budget === "Below Rs. 10,000") {
+        params.append("max_price", "9999");
+      } else if (budget === "Rs. 10,000 - 20,000") {
+        params.append("min_price", "10000");
+        params.append("max_price", "20000");
+      } else if (budget === "Above Rs. 20,000") {
+        params.append("min_price", "20001");
+      }
+    }
+
+    fetch(`${baseUrl}/api/post/active-posts/?${params.toString()}`);
+    // OR fetch directly if you're loading data here
+    // fetch(`/api/post/public-posts/?${params.toString()}`).then(...)
+  };
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#FFF7ED] via-[#FFE9D0] to-[#FFD8A9] py-20 px-4 text-center">
       <div className="absolute inset-0 bg-[url('/kathmandu-pattern.svg')] opacity-10 bg-center bg-cover pointer-events-none" />
@@ -27,6 +58,8 @@ export default function HeroSearchSection() {
             <input
               type="text"
               placeholder="Search by Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="bg-transparent w-full text-sm md:text-base outline-none placeholder-gray-500"
             />
           </div>
@@ -39,6 +72,8 @@ export default function HeroSearchSection() {
             <input
               type="text"
               placeholder="Search Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               className="bg-transparent w-full text-sm md:text-base outline-none placeholder-gray-500"
             />
             <Search className="text-gray-400 w-4 h-4" />
@@ -49,7 +84,8 @@ export default function HeroSearchSection() {
           {/* Dropdown: Property Type */}
           <div className="flex items-center gap-2 px-4 py-4 w-full md:w-auto">
             <Home className="text-orange-500 w-5 h-5" />
-            <select className="bg-transparent text-sm md:text-base text-gray-700 outline-none">
+            <select value={propertyType}
+              onChange={(e) => setPropertyType(e.target.value)} className="bg-transparent text-sm md:text-base text-gray-700 outline-none">
               <option>Property Type</option>
               <option>1BHK</option>
               <option>2BHK</option>
@@ -62,7 +98,8 @@ export default function HeroSearchSection() {
           {/* Dropdown: Budget */}
           <div className="flex items-center gap-2 px-4 py-4 w-full md:w-auto">
             <DollarSign className="text-orange-500 w-5 h-5" />
-            <select className="bg-transparent text-sm md:text-base text-gray-700 outline-none">
+            <select value={budget}
+              onChange={(e) => setBudget(e.target.value)} className="bg-transparent text-sm md:text-base text-gray-700 outline-none">
               <option>Budget</option>
               <option>Below Rs. 10,000</option>
               <option>Rs. 10,000 - 20,000</option>
@@ -71,7 +108,7 @@ export default function HeroSearchSection() {
           </div>
 
           {/* Search Button */}
-          <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-none md:rounded-r-2xl font-semibold whitespace-nowrap transition-all duration-200">
+          <button onClick={handleSearch} className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-none md:rounded-r-2xl font-semibold whitespace-nowrap transition-all duration-200">
             <Search className="w-4 h-4" />
             Search
           </button>

@@ -9,3 +9,4 @@ pillow==11.2.1
 social-auth-app-django==5.4.3
 google-auth==2.40.2
 django-multiselectfield==0.1.13
+django-filter==25.1
