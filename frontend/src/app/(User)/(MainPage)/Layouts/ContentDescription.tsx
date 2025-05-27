@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-
+import React, { useState, useEffect, useRef ,useMemo} from "react";
+import FacebookComments from "./FacebookComment";
 import {
   CheckCircle,
   MapPin,
@@ -28,6 +28,7 @@ interface ContentDescriptionProps {
   phone: string;
   contactNote: string;
 }
+import { useParams } from "next/navigation";
 
 export default function ContentDescription({
   title,
@@ -45,7 +46,8 @@ export default function ContentDescription({
   const [activeSection, setActiveSection] = useState<string>("details");
   const [copied, setCopied] = useState(false);
 
-  const sectionIds = [
+const sectionIds = useMemo(
+  () => [
     "details",
     "location",
     "amenities",
@@ -53,37 +55,42 @@ export default function ContentDescription({
     "security",
     "price",
     "contact",
-  ];
+  ],
+  []
+);
+  const params = useParams();
+  const slug = decodeURIComponent((params?.slug as string) || "");
 
-  useEffect(() => {
+useEffect(() => {
+  
+const container = containerRef.current;
+  if (!container) return;
+  function onScroll() {
     const container = containerRef.current;
-    if (!container) return;
+  if (!container) return;
+    let current = activeSection;
+    const scrollTop = container.scrollTop;
 
-    function onScroll() {
-      let current = activeSection;
-      const scrollTop = container.scrollTop;
-
-      // We'll find the last section whose top is <= scrollTop + offset
-      for (const id of sectionIds) {
-        const section = container.querySelector(`#${id}`);
-        if (section) {
-          const offsetTop = (section as HTMLElement).offsetTop;
-          if (offsetTop <= scrollTop + 60) {
-            current = id;
-          }
+    for (const id of sectionIds) {
+      const section = container.querySelector(`#${id}`);
+      if (section) {
+        const offsetTop = (section as HTMLElement).offsetTop;
+        if (offsetTop <= scrollTop + 60) {
+          current = id;
         }
-      }
-
-      if (current !== activeSection) {
-        setActiveSection(current);
       }
     }
 
-    container.addEventListener("scroll", onScroll, { passive: true });
-    onScroll(); // initial check
+    if (current !== activeSection) {
+      setActiveSection(current);
+    }
+  }
 
-    return () => container.removeEventListener("scroll", onScroll);
-  }, [activeSection, sectionIds]);
+  container.addEventListener("scroll", onScroll, { passive: true });
+  onScroll(); // initial check
+
+  return () => container.removeEventListener("scroll", onScroll);
+}, [activeSection, sectionIds]);
 
   function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
     e.preventDefault();
@@ -120,6 +127,7 @@ export default function ContentDescription({
       }
     }
   };
+ const url = `https://gharbhetiba.mantracodex.com/${slug}`;
 
   return (
     <div
@@ -270,6 +278,7 @@ export default function ContentDescription({
           </button>
         </div>
       </div>
+       <FacebookComments url={url} />
     </div>
   );
 }

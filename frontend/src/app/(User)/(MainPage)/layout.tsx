@@ -11,7 +11,7 @@ import { debounce } from "lodash";
 import { useParams, useRouter } from "next/navigation";
 import { listings } from "../../../data/data";
 import HeroSearchSection from "./Layouts/fancySearch";
-
+import { Listing } from "@/types/listing";
 const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
@@ -20,7 +20,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const slug = decodeURIComponent((params?.slug as string) || "");
   const [selected, setSelected] = useState<string | null>(slug || null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [visibleListings, setVisibleListings] = useState(
+  const [visibleListings, setVisibleListings] = useState<Listing[]>(
     listings.slice(0, PAGE_SIZE)
   );
   const isLoading = useRef(false);
@@ -83,7 +83,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
 
   // Clicking a listing updates active state and URL without scroll jump
-  const handleListingClick = (listing: any, index: number) => {
+  const handleListingClick = (listing: Listing, index: number) => {
     setActiveIndex(index);
     setSelected(listing.slug);
     router.replace(`/${encodeURIComponent(listing.slug)}`, {

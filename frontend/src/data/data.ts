@@ -1,7 +1,7 @@
 // app/_data/data.ts
 import { Sofa, Droplet, Wifi, Truck } from "lucide-react";
-
-export const listings = [
+import { Listing } from '../types/listing';
+export const listings: Listing[] = [
   {
      slug: "furnished-room-kathmandus",
     title: "Spacious 1BHK Room",
@@ -19,7 +19,60 @@ export const listings = [
       { label: "Free Wi-Fi", icon: "Wifi" },
       { label: "Parking", icon: "Truck" },
     ],
-  },  {
+  },
+   {
+     slug: "furnished-room-kathmandus-1",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  }, {
+     slug: "furnished-room-kathmandus-2",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  }, {
+     slug: "furnished-room-kathmandus-3",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  },
+    {
     slug: "furnished-room-kathmandu",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
@@ -37,7 +90,7 @@ export const listings = [
       { label: "Parking", icon: "Truck" },
     ],
   },  {
-     slug: "spacious-1bhk-kathmandu",
+     slug: "spacious-1bhk-kathmandu-1",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
     price: "Rs. 12,000 / month",
@@ -49,24 +102,85 @@ export const listings = [
       { label: "Free Wi-Fi", icon: "Wifi" },
       { label: "Parking", icon: "Truck" },
     ],
-  },  {
+  },   {
+     slug: "furnished-room-kathmandus",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
     price: "Rs. 12,000 / month",
     phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
     amenities: [
-      { label: "Furnished", icon: "Sofa" },
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
       { label: "Attached Bathroom", icon: "Droplet" },
       { label: "Free Wi-Fi", icon: "Wifi" },
       { label: "Parking", icon: "Truck" },
     ],
-  },  {
+  },
+   {
+     slug: "furnished-room-kathmandus-1",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
     price: "Rs. 12,000 / month",
     phone: "9800000000",
-        images: [
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  }, {
+     slug: "furnished-room-kathmandus-2",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  }, {
+     slug: "furnished-room-kathmandus-3",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  },
+  
+  
+  {
+    slug: "furnished-room-kathmandu",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+     images: [
       "https://picsum.photos/seed/apt1/600/400",
       "https://picsum.photos/seed/apt2/600/400",
       "https://picsum.photos/seed/apt3/600/400",
@@ -78,6 +192,7 @@ export const listings = [
       { label: "Parking", icon: "Truck" },
     ],
   },  {
+     slug: "spacious-1bhk-kathmandu-1",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
     price: "Rs. 12,000 / month",
@@ -89,125 +204,74 @@ export const listings = [
       { label: "Free Wi-Fi", icon: "Wifi" },
       { label: "Parking", icon: "Truck" },
     ],
-  },  {
+  },   {
+     slug: "furnished-room-kathmandus",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
     price: "Rs. 12,000 / month",
     phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
     ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
     amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
-      { label: "Attached Bathroom", icon: "Droplet" },
-      { label: "Free Wi-Fi", icon: "Wifi" },
-      { label: "Parking", icon: "Truck" },
-    ],
-  },  {
-    title: "Spacious 1BHK Room",
-    location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
-    phone: "9800000000",
-    images: ["/img1.jpg", "/img2.jpg", "/img3.jpg"],
-    amenities: [
-      { label: "Furnished", icon: "Sofa" },
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
       { label: "Attached Bathroom", icon: "Droplet" },
       { label: "Free Wi-Fi", icon: "Wifi" },
       { label: "Parking", icon: "Truck" },
     ],
   },
-  {
-    title: "Cozy Studio Apartment",
-    location: "Lazimpat, Kathmandu",
-    price: "Rs. 15,000 / month",
-    phone: "9811111111",
-    images: ["/img4.jpg", "/img5.jpg"],
+   {
+     slug: "furnished-room-kathmandus-1",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
     amenities: [
-      { label: "Fully Furnished", icon: "Sofa" },
-      { label: "Private Bathroom", icon: "Droplet" },
-      { label: "Wi-Fi Included", icon: "Wifi" },
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  }, {
+     slug: "furnished-room-kathmandus-2",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
+    ],
+  }, {
+     slug: "furnished-room-kathmandus-3",
+    title: "Spacious 1BHK Room",
+    location: "Baneshwor, Kathmandu",
+    price: "Rs. 12,000 / month",
+    phone: "9800000000",
+    images: [
+      "https://picsum.photos/seed/apt1/600/400",
+      "https://picsum.photos/seed/apt2/600/400",
+      "https://picsum.photos/seed/apt3/600/400",
+    ],
+    amenities: [
+      { label: "Furnishedfsdfs sdfsd", icon: "Sofa" },
+      { label: "Attached Bathroom", icon: "Droplet" },
+      { label: "Free Wi-Fi", icon: "Wifi" },
+      { label: "Parking", icon: "Truck" },
     ],
   },
   // ... more listings if needed

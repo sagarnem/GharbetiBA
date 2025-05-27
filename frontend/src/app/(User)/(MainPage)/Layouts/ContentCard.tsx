@@ -1,5 +1,5 @@
 "use client";
-
+import { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import {
@@ -29,7 +29,7 @@ type Props = {
 };
 
 // Map icon name strings to actual icon components
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   Sofa,
   Droplet,
   Wifi,
