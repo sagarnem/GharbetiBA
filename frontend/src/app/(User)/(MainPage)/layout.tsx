@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, {
   ReactNode,
   useState,
@@ -81,7 +81,6 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
   // Get description matching active listing or fallback
 
-
   // Clicking a listing updates active state and URL without scroll jump
   const handleListingClick = (listing: Listing, index: number) => {
     setActiveIndex(index);
@@ -94,66 +93,43 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Hero Section */}
-      <div className="mx-28">
-    <div className="bg-red-200 w-full h-24 md:h-28 lg:h-32 flex items-center justify-center">
-  <p className="text-base md:text-lg font-medium text-red-800">
-    Your Banner Ad Here
-  </p>
-</div>
-
-   {/* <section className="relative bg-gradient-to-br from-orange-100 via-orange-200 to-orange-300 py-16 px-6 text-center shadow-inner">
-  <div className="absolute inset-0 bg-orange-50 opacity-40" />
-  <div className="relative z-10 max-w-2xl mx-auto">
-    <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 mb-4 leading-tight drop-shadow">
-      Find Your Perfect Room
-    </h1>
-    <p className="text-lg md:text-xl text-gray-600 mb-6">
-      In Kathmandu and Beyond — Filter, Compare, and Discover Comfort
-    </p>
-    <div className="flex items-center mt-8 shadow-lg rounded-full overflow-hidden bg-white border border-gray-200 focus-within:ring-2 focus-within:ring-orange-400">
-      <input
-        type="text"
-        placeholder="Search by area, city, or landmark..."
-        className="flex-grow px-6 py-4 text-base outline-none text-gray-800 placeholder-gray-500"
-      />
-      <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-4 font-semibold transition duration-200">
-        Search
-      </button>
-    </div>
-  </div>
-</section> */}
-<HeroSearchSection/>
-
-
-
-
-      {/* Listings + Description */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-        {/* Sidebar Listings */}
-        <div className="min-h-[80vh] overflow-y-auto">
-          {visibleListings.map((listing, i) => (
-            <section
-              key={listing.slug}
-              onClick={() => handleListingClick(listing, i)}
-              className={`cursor-pointer border rounded mb-4 px-2 py-2 ${
-                listing.slug === selected
-                  ? "border-orange-500 border-2 bg-orange-50"
-                  : "border-gray-300"
-              }`}
-            >
-              <ContentCard {...listing} />
-            </section>
-          ))}
-          {visibleListings.length < listings.length && (
-            <p className="text-center text-gray-500 py-4">Loading more...</p>
-          )}
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+        <div className=" w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">
+          <p className="text-base md:text-lg font-medium text-orange-800">
+            Your Banner Ad Here
+          </p>
         </div>
 
-        {/* Main Content Description */}
-        <div className="sticky top-28 self-start h-fit  max-h-[80vh]">
-          {children }
+        <HeroSearchSection />
+
+        {/* Listings + Description */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          {/* Sidebar Listings */}
+          <div className=" overflow-y-auto">
+            {visibleListings.map((listing, i) => (
+              <section
+                key={listing.slug}
+                onClick={() => handleListingClick(listing, i)}
+                className={`cursor-pointer border rounded mb-2   ${
+                  listing.slug === selected
+                    ? "border-orange-500 border-2 bg-orange-50"
+                    : "border-gray-300"
+                }`}
+              >
+                <ContentCard {...listing} />
+              </section>
+            ))}
+            {visibleListings.length < listings.length && (
+              <p className="text-center text-gray-500 py-4">Loading more...</p>
+            )}
+          </div>
+
+          {/* Main Content Description */}
+          <div className="sticky top-28 self-start h-fit  max-h-[80vh]">
+            {children}
+          </div>
         </div>
-      </div></div>
+      </div>
     </>
   );
 }

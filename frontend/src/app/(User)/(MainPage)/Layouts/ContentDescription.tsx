@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef ,useMemo} from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import FacebookComments from "./FacebookComment";
 import {
   CheckCircle,
@@ -9,7 +9,9 @@ import {
   Eye,
   Share2,
   ClipboardCheck,
+  ChevronDown,
 } from "lucide-react";
+import { useParams } from "next/navigation";
 
 interface Amenity {
   icon: React.ComponentType<{ size?: number; className?: string }>;
@@ -28,7 +30,8 @@ interface ContentDescriptionProps {
   phone: string;
   contactNote: string;
 }
-import { useParams } from "next/navigation";
+
+type SectionId = "details" | "location" | "amenities" | "rental" | "security" | "price" | "contact"|"facebook-comments";
 
 export default function ContentDescription({
   title,
@@ -43,11 +46,12 @@ export default function ContentDescription({
   contactNote,
 }: ContentDescriptionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeSection, setActiveSection] = useState<string>("details");
+  const [activeSection, setActiveSection] = useState<SectionId>("details");
   const [copied, setCopied] = useState(false);
-
-const sectionIds = useMemo(
-  () => [
+  const params = useParams();
+  const slug = decodeURIComponent((params?.slug as string) || "");
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const sectionIds: SectionId[] = useMemo(() => [
     "details",
     "location",
     "amenities",
@@ -55,28 +59,26 @@ const sectionIds = useMemo(
     "security",
     "price",
     "contact",
-  ],
-  []
-);
-  const params = useParams();
-  const slug = decodeURIComponent((params?.slug as string) || "");
+    "facebook-comments"
+  ], []);
 
-useEffect(() => {
-  
-const container = containerRef.current;
-  if (!container) return;
-  function onScroll() {
+  const url = useMemo(() => `https://gharbhetiba.mantracodex.com/${slug}`, [slug]);
+
+  // Scroll handler with throttling
+  const handleScroll = useCallback(() => {
     const container = containerRef.current;
-  if (!container) return;
-    let current = activeSection;
+    if (!container) return;
+
     const scrollTop = container.scrollTop;
+    let current: SectionId = activeSection;
 
     for (const id of sectionIds) {
       const section = container.querySelector(`#${id}`);
       if (section) {
-        const offsetTop = (section as HTMLElement).offsetTop;
-        if (offsetTop <= scrollTop + 60) {
+        const { offsetTop, offsetHeight } = section as HTMLElement;
+        if (offsetTop <= scrollTop + 100 && offsetTop + offsetHeight > scrollTop + 60) {
           current = id;
+          break;
         }
       }
     }
@@ -84,201 +86,252 @@ const container = containerRef.current;
     if (current !== activeSection) {
       setActiveSection(current);
     }
-  }
+  }, [activeSection, sectionIds]);
 
-  container.addEventListener("scroll", onScroll, { passive: true });
-  onScroll(); // initial check
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  return () => container.removeEventListener("scroll", onScroll);
-}, [activeSection, sectionIds]);
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
-  function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: SectionId) => {
     e.preventDefault();
     const container = containerRef.current;
     if (!container) return;
+
     const section = container.querySelector(`#${id}`);
     if (section) {
-      const offsetTop = (section as HTMLElement).offsetTop;
+      const offsetTop = (section as HTMLElement).offsetTop - 60;
       container.scrollTo({ top: offsetTop, behavior: "smooth" });
       setActiveSection(id);
     }
-  }
+  }, []);
 
-  const handleShare = async () => {
-    const shareData = {
-      title,
-      text: description[0] ?? "",
-      url: window.location.href,
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.error("Share cancelled or failed:", err);
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
+  const handleShare = useCallback(async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title,
+          text: description[0] ?? "",
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error("Clipboard write failed:", err);
       }
+    } catch (err) {
+      console.error("Sharing failed:", err);
     }
-  };
- const url = `https://gharbhetiba.mantracodex.com/${slug}`;
+  }, [title, description, url]);
+
+  const renderListItems = (items: string[], icon?: React.ReactNode) => (
+    <ul className="space-y-3 mb-6">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-3 text-gray-700 text-base">
+          {icon || <CheckCircle size={20} className="text-orange-400 flex-shrink-0 mt-0.5" />}
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
-    <div
+     <div
       ref={containerRef}
-      className="rounded-l-md border bg-white p-0 max-h-[calc(100vh-7rem-2rem)] overflow-y-auto transition border-orange-400 shadow-[0_0_10px_3px_rgba(255,165,0,0.2)]"
-      style={{ scrollBehavior: "smooth" }}
+      className="rounded-l-md border bg-white p-0 max-h-[calc(100vh-7rem-2rem)] overflow-y-auto transition border-orange-400 shadow-[0_0_10px_3px_rgba(255,165,0,0.2)] scroll-smooth relative"
     >
-      {/* Sticky Nav (Inside Scrollable Area) */}
-      <nav className="sticky top-0 z-10 bg-white border-b border-orange-400 shadow-sm px-8">
-        <ul className="flex gap-4 py-3 text-sm font-medium text-gray-700">
-          {sectionIds.map((id) => (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                onClick={(e) => handleNavClick(e, id)}
-                className={`hover:text-orange-600 ${
-                  activeSection === id ? "text-orange-600 font-semibold" : ""
-                }`}
-              >
-                {id.charAt(0).toUpperCase() + id.slice(1)}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {/* Enhanced Sticky Navigation */}
+<nav className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-orange-200 shadow-sm">
+  {/* Mobile Navigation Toggle */}
+  <div className="sm:hidden flex items-center justify-between px-4 py-3">
+    <button
+      onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+      className="flex items-center gap-2 text-orange-600 font-medium"
+    >
+      {activeSection === 'facebook-comments' ? 'Facebook Comments' : activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}
+      <ChevronDown
+        size={18}
+        className={`transition-transform ${
+          isMobileNavOpen ? "rotate-180" : ""
+        }`}
+      />
+    </button>
+    <div className="w-10 h-10 flex items-center justify-center bg-orange-100 rounded-full text-orange-600">
+      {sectionIds.findIndex((id) => id === activeSection) + 1}/{sectionIds.length}
+    </div>
+  </div>
 
-      {/* Scrollable Content */}
-      <div className="px-8 py-6">
-        <h3
-          id="details"
-          className="text-3xl font-extrabold text-gray-900 mb-6 border-b border-gray-200 pb-2"
-        >
-          {title}
-        </h3>
+  {/* Desktop Navigation */}
+  <div className="hidden sm:block px-6">
+    <ul className="flex gap-1 py-3">
+      {sectionIds.map((id) => (
+        <li key={id} className="flex-1 min-w-0">
+          <a
+            href={`#${id}`}
+            onClick={(e) => {
+              handleNavClick(e, id);
+              setIsMobileNavOpen(false);
+            }}
+            className={`block w-full text-center px-3 py-2 rounded-md transition-all text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis ${
+              activeSection === id
+                ? "bg-orange-500 text-white shadow-md"
+                : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
+            }`}
+          >
+            {id === 'facebook-comments' ? 'FB Comments' : id.charAt(0).toUpperCase() + id.slice(1)}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
 
-        {description.map((para, i) => (
-          <p key={i} className="text-gray-800 text-lg leading-relaxed mb-6">
-            {para}
-          </p>
+  {/* Mobile Navigation Dropdown */}
+  {isMobileNavOpen && (
+    <div className="sm:hidden bg-white border-t border-gray-100 shadow-lg">
+      <ul className="py-2 px-4 space-y-1">
+        {sectionIds.map((id) => (
+          <li key={id}>
+            <a
+              href={`#${id}`}
+              onClick={(e) => {
+                handleNavClick(e, id);
+                setIsMobileNavOpen(false);
+              }}
+              className={`block px-4 py-3 rounded-md transition-colors ${
+                activeSection === id
+                  ? "bg-orange-100 text-orange-600 font-semibold"
+                  : "text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              {id === 'facebook-comments' ? 'Facebook Comments' : id.charAt(0).toUpperCase() + id.slice(1)}
+            </a>
+          </li>
         ))}
+      </ul>
+    </div>
+  )}
+</nav>
 
-        <h4
-          id="location"
-          className="text-2xl font-semibold text-gray-900 mb-4"
-        >
-          Location
-        </h4>
-        <p className="text-sm text-gray-600 flex items-center gap-2 mb-6">
-          <MapPin size={18} className="text-gray-400" />
-          {location}
-        </p>
+      {/* Content Sections */}
+      <div className="px-4 sm:px-8 py-6 space-y-8">
+        {/* Details Section */}
+        <section id="details" className="scroll-mt-16">
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+            {title}
+          </h3>
+          <div className="space-y-4">
+            {description.map((para, i) => (
+              <p key={i} className="text-gray-800 text-base sm:text-lg leading-relaxed">
+                {para}
+              </p>
+            ))}
+          </div>
+        </section>
 
-        <h4
-          id="amenities"
-          className="text-2xl font-semibold text-gray-900 mb-4"
-        >
-          Key Amenities
-        </h4>
-        <ul className="space-y-3 mb-6">
-          {keyAmenities.map(({ icon: Icon, text }, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-3 text-gray-700 text-base"
-            >
-              {Icon && <Icon size={16} />}
-              <span>{text}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Location Section */}
+        <section id="location" className="scroll-mt-16">
+          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+            Location
+          </h4>
+          <div className="flex items-center gap-2 text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <MapPin size={18} className="text-gray-400 flex-shrink-0" />
+            <p className="text-sm sm:text-base">{location}</p>
+          </div>
+        </section>
 
-        <h4 id="rental" className="text-2xl font-semibold text-gray-900 mb-4">
-          Rental Terms
-        </h4>
-        <ul className="space-y-3 mb-6">
-          {rentalTerms.map((item, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-3 text-gray-700 text-base"
-            >
-              <CheckCircle
-                size={20}
-                className="text-orange-400 flex-shrink-0"
-              />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Amenities Section */}
+        <section id="amenities" className="scroll-mt-16">
+          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+            Key Amenities
+          </h4>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {keyAmenities.map(({ icon: Icon, text }, i) => (
+              <li key={i} className="flex items-center gap-3 text-gray-700 text-base bg-gray-50 p-3 rounded-lg">
+                {Icon && <Icon size={16} className="text-orange-500 flex-shrink-0" />}
+                <span>{text}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-        <h4
-          id="security"
-          className="text-2xl font-semibold text-gray-900 mb-4"
-        >
-          Security & Facilities
-        </h4>
-        <ul className="space-y-3 mb-6">
-          {securityFacilities.map((item, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-3 text-gray-700 text-base"
-            >
-              <CheckCircle
-                size={20}
-                className="text-orange-400 flex-shrink-0"
-              />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Rental Terms Section */}
+        <section id="rental" className="scroll-mt-16">
+          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+            Rental Terms
+          </h4>
+          {renderListItems(rentalTerms)}
+        </section>
 
-        <h4 id="price" className="text-2xl font-semibold text-gray-900 mb-4">
-          Price & Availability
-        </h4>
-        <div className="text-base text-gray-700 mb-6">
-          <p className="font-bold text-green-700 text-xl mb-1">{price}</p>
-          <p className="text-sm text-gray-500">{availability}</p>
-        </div>
+        {/* Security Section */}
+        <section id="security" className="scroll-mt-16">
+          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+            Security & Facilities
+          </h4>
+          {renderListItems(securityFacilities)}
+        </section>
 
-        <h4 id="contact" className="text-2xl font-semibold text-gray-900 mb-4">
-          Contact Information
-        </h4>
-        <div className="text-sm text-gray-700 space-y-2">
-          <p className="flex items-center gap-3 font-medium">
-            <Phone size={20} className="text-gray-400" />
-            {phone}
-          </p>
-          <p className="flex items-center gap-3 font-medium">
-            <Eye size={20} className="text-blue-600" />
-            {contactNote}
-          </p>
-        </div>
+        {/* Price Section */}
+        <section id="price" className="scroll-mt-16">
+          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+            Price & Availability
+          </h4>
+          <div className="bg-green-50 p-4 rounded-lg">
+            <p className="font-bold text-green-700 text-lg sm:text-xl mb-1">{price}</p>
+            <p className="text-sm text-gray-600">{availability}</p>
+          </div>
+        </section>
 
-        <div className="mt-6 flex justify-end">
+        {/* Contact Section */}
+        <section id="contact" className="scroll-mt-16">
+          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+            Contact Information
+          </h4>
+          <div className="space-y-3 bg-blue-50 p-4 rounded-lg">
+            <div className="flex items-center gap-3 font-medium text-gray-700">
+              <Phone size={18} className="text-blue-500 flex-shrink-0" />
+              <a href={`tel:${phone}`} className="hover:text-blue-600 transition-colors">
+                {phone}
+              </a>
+            </div>
+            <div className="flex items-start gap-3 text-sm text-gray-600">
+              <Eye size={18} className="text-blue-500 flex-shrink-0 mt-0.5" />
+              <p>{contactNote}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Share Button */}
+        <div className="flex justify-end">
           <button
             onClick={handleShare}
-            className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg shadow hover:bg-orange-600 transition"
+            className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg shadow hover:bg-orange-600 transition-colors"
+            aria-label="Share this listing"
           >
             {copied ? (
               <>
-                <ClipboardCheck size={20} />
+                <ClipboardCheck size={18} />
                 Link Copied!
               </>
             ) : (
               <>
-                <Share2 size={20} />
+                <Share2 size={18} />
                 Share
               </>
             )}
           </button>
         </div>
       </div>
-       <FacebookComments url={url} />
+
+      {/* Facebook Comments */}
+   <div id="facebook-comments" className="px-4 sm:px-8 pb-6 scroll-mt-16">
+  <h3 className="text-xl font-bold text-gray-900 mb-6">Facebook Comments</h3>
+  <FacebookComments url={url} />
+</div>
+
     </div>
+
   );
 }
