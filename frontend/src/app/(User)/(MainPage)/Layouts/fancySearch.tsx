@@ -1,6 +1,5 @@
-import { Pencil, MapPin, Search, Home, DollarSign } from "lucide-react";
+import { Pencil, MapPin, Search,  } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import PropertyTypeDropdown from "@/app/components/propertytypedropdown";
 import BudgetDropdown from "@/app/components/budgetdropdown";
 export default function HeroSearchSection() {
