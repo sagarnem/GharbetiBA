@@ -1,17 +1,12 @@
 "use client";
-import React, {
-  ReactNode,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-} from "react";
+import React, { ReactNode, useState, useEffect, useCallback, useRef } from "react";
 import ContentCard from "./Layouts/ContentCard";
 import { debounce } from "lodash";
 import { useParams, useRouter } from "next/navigation";
 import { listings } from "../../../data/data";
 import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
+
 const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
@@ -20,36 +15,28 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const slug = decodeURIComponent((params?.slug as string) || "");
   const [selected, setSelected] = useState<string | null>(slug || null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [visibleListings, setVisibleListings] = useState<Listing[]>(
-    listings.slice(0, PAGE_SIZE)
-  );
+  const [visibleListings, setVisibleListings] = useState<Listing[]>(listings.slice(0, PAGE_SIZE));
   const isLoading = useRef(false);
 
-  // Load more listings for infinite scroll
+  // Modal open state for mobile
+  const [modalOpen, setModalOpen] = useState(false);
+
   const loadMoreListings = useCallback(() => {
     if (isLoading.current || visibleListings.length >= listings.length) return;
     isLoading.current = true;
-
-    const nextItems = listings.slice(
-      visibleListings.length,
-      visibleListings.length + PAGE_SIZE
-    );
-
+    const nextItems = listings.slice(visibleListings.length, visibleListings.length + PAGE_SIZE);
     setVisibleListings((prev) => [...prev, ...nextItems]);
-
     setTimeout(() => {
       isLoading.current = false;
     }, 300);
   }, [visibleListings]);
 
-  // Scroll listener with debounce to load more when near bottom
   useEffect(() => {
     const handleScroll = debounce(() => {
       const scrollTop = window.scrollY;
       const windowHeight = window.innerHeight;
       const fullHeight = document.body.scrollHeight;
 
-      // Trigger loading more when scrolled at least 50%
       if ((scrollTop + windowHeight) / fullHeight >= 0.5) {
         loadMoreListings();
       }
@@ -62,14 +49,12 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     };
   }, [loadMoreListings]);
 
-  // Update active index if listings change
   useEffect(() => {
     if (activeIndex >= visibleListings.length) {
       setActiveIndex(visibleListings.length - 1);
     }
   }, [visibleListings, activeIndex]);
 
-  // Sync selected and activeIndex when slug changes (URL param)
   useEffect(() => {
     if (!slug) return;
     const index = listings.findIndex((item) => item.slug === slug);
@@ -79,25 +64,25 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     }
   }, [slug]);
 
-  // Get description matching active listing or fallback
-
-  // Clicking a listing updates active state and URL without scroll jump
   const handleListingClick = (listing: Listing, index: number) => {
     setActiveIndex(index);
     setSelected(listing.slug);
     router.replace(`/${encodeURIComponent(listing.slug)}`, {
       scroll: false,
     });
+
+    // Open modal on mobile
+    if (window.innerWidth < 768) {
+      setModalOpen(true);
+    }
   };
 
   return (
     <>
       {/* Hero Section */}
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
-        <div className=" w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">
-          <p className="text-base md:text-lg font-medium text-orange-800">
-            Your Banner Ad Here
-          </p>
+        <div className="w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">
+          <p className="text-base md:text-lg font-medium text-orange-800">Your Banner Ad Here</p>
         </div>
 
         <HeroSearchSection />
@@ -105,12 +90,12 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
         {/* Listings + Description */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
           {/* Sidebar Listings */}
-          <div className=" overflow-y-auto">
+          <div className="overflow-y-auto">
             {visibleListings.map((listing, i) => (
               <section
                 key={listing.slug}
                 onClick={() => handleListingClick(listing, i)}
-                className={`cursor-pointer border rounded mb-2   ${
+                className={`cursor-pointer border rounded mb-2 ${
                   listing.slug === selected
                     ? "border-orange-500 border-2 bg-orange-50"
                     : "border-gray-300"
@@ -124,11 +109,54 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
             )}
           </div>
 
-          {/* Main Content Description */}
-          <div className="sticky top-28 self-start h-fit  max-h-[80vh]">
+          {/* Main Content Description on desktop only */}
+          <div className="hidden md:block sticky top-28 self-start h-fit max-h-[80vh]">
             {children}
           </div>
         </div>
+
+        {/* Modal for mobile */}
+{/* Modal for mobile */}
+{modalOpen && (
+  <div
+    className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black bg-opacity-70 backdrop-blur-sm p-4 sm:p-6 overflow-auto"
+    onClick={() => setModalOpen(false)}
+  >
+    <div
+      className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-lg relative flex flex-col"
+      onClick={(e) => e.stopPropagation()}
+      style={{ minHeight: "300px" }}
+    >
+      {/* Drag handle */}
+      <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-2"></div>
+
+      {/* Close button */}
+      <button
+        onClick={() => setModalOpen(false)}
+        aria-label="Close modal"
+        className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 active:bg-gray-300 transition"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 text-gray-600 hover:text-gray-800"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      {/* Content area */}
+      <div className="px-5 pb-6 pt-2 text-gray-900 text-sm sm:text-base leading-relaxed tracking-normal">
+        {children}
+      </div>
+    </div>
+  </div>
+)}
+
+
       </div>
     </>
   );
