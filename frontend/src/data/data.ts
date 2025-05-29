@@ -6,7 +6,7 @@ export const listings: Listing[] = [
      slug: "furnished-room-kathmandus",
     title: "Spacious 1BHK Room",
     location: "Baneshwor, Kathmandu",
-    price: "Rs. 12,000 / month",
+    price: "Rs. 12,000",
     phone: "9800000000",
     images: [
       "https://picsum.photos/seed/apt1/600/400",
@@ -124,7 +124,7 @@ export const descriptions = [
     ],
     rentalTerms: ["Minimum lease term: 6 months", "No pets allowed"],
     securityFacilities: ["CCTV surveillance", "On-call maintenance support"],
-    price: "Rs. 12,000 / month",
+    price: "Rs. 12,000",
     availability: "Available Now",
     phone: "9800000000",
     contactNote: "Schedule a visit today.",

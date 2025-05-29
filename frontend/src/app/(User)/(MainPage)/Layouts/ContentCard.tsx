@@ -2,17 +2,7 @@
 import { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
-import {
-  MapPin,
-  Phone,
-  Info,
-  Home,
-  Sofa,
-  Wifi,
-  Truck,
-  Droplet,
-  Heart,
-} from "lucide-react";
+import { MapPin, Sofa, Wifi, Truck, Droplet, Heart } from "lucide-react";
 
 type Amenity = {
   label: string;
@@ -36,14 +26,7 @@ const iconMap: Record<string, LucideIcon> = {
   Truck,
 };
 
-const ContentCard = ({
-  title,
-  location,
-  price,
-  phone,
-  images,
-  amenities,
-}: Props) => {
+const ContentCard = ({ title, location, price, images, amenities }: Props) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [wishlisted, setWishlisted] = useState(false);
 
@@ -58,113 +41,114 @@ const ContentCard = ({
       "
     >
       {/* Wishlist Button */}
-      <button
-        onClick={toggleWishlist}
-        aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        className={`
-          absolute top-4 right-4 w-10 h-10 flex items-center justify-center
-          bg-white shadow-md transition hover:scale-110 active:scale-95
-          ${wishlisted ? "" : "text-gray-400"}
-        `}
-      >
-        <Heart
-          size={24}
-          fill={wishlisted ? "" : "none"}
-          strokeWidth={2.5}
-          className={`transition-transform ${
-            wishlisted ? "scale-110" : "scale-100"
-          }`}
-        />
-      </button>
 
-      <div className="grid md:grid-cols-[40%_60%] h-full">
+      <div className="grid grid-cols-[40%_60%] h-full ">
         {/* Image Section */}
-        <div className="flex flex-col items-center bg-gray-50 h-full rounded-xl overflow-hidden">
-          <div className="w-full h-28 md:h-52 rounded-sm overflow-hidden mb-4 shadow-sm">
+        <div className="flex flex-col items-center bg-gray-50 h-full rounded overflow-hidden  relative">
+          {/* Main Image */}
+          <div className="w-full h-34 sm:h-50 aspect-video rounded overflow-hidden relative">
             <Image
               src={selectedImage}
               alt="Main"
-              width={150}
-              height={150}
-              className="w-full h-full object-cover rounded-xl"
+              width={800}
+              height={500}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-          </div>
-          <div className="flex gap-3 flex-wrap justify-center">
-            {images.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedImage(img)}
-                className={`w-10 h-10 rounded-sm overflow-hidden border-2 transition ${
-                  selectedImage === img
-                    ? "border-orange-500 ring-1 ring-orange-300"
-                    : "border-transparent hover:border-gray-300"
-                }`}
-                aria-label={`Select image ${i + 1}`}
-              >
-                <Image
-                  src={img}
-                  alt={`Thumbnail ${i + 1}`}
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
+            <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition"></div>
+
+            {/* Thumbnail Selector - overlaid on bottom */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 bg-white/40 backdrop-blur-sm rounded px-2 py-1 overflow-x-auto max-w-[90%] no-scrollbar">
+              {images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(img)}
+                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden transition-all duration-200 
+            ${
+              selectedImage === img
+                ? "border-2 border-orange-500 scale-110"
+                : "border-2 border-transparent hover:border-gray-300 hover:scale-105"
+            }
+          `}
+                  aria-label={`Select image ${i + 1}`}
+                >
+                  <Image
+                    src={img}
+                    alt={`Thumbnail ${i + 1}`}
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Info Section */}
-        <div className="p-4 flex flex-col justify-between gap-6 h-full rounded-r-4xl">
+        <div className="p-1 pl-1.5 sm:p-4 flex flex-col justify-between gap-1.5 sm:gap-4 h-full rounded-r-2xl text-xs sm:text-sm">
           {/* Title & Location */}
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
-              <Home size={24} className="text-orange-500" />
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-1 sm:gap-2">
               {title}
             </h2>
-            <p className="text-sm text-gray-600 flex items-center gap-2 mt-2">
-              <MapPin size={18} className="text-gray-400" />
+            <p className="text-[11px] sm:text-xs text-gray-600 flex items-center gap-0 mt-0.5">
+              <MapPin size={14} className="text-gray-400" />
               {location}
             </p>
           </div>
-
+          <p className="text-[11px] sm:text-xs text-gray-600 line-clamp-2">
+            {title}
+          </p>
           {/* Amenities */}
-          <div className="flex flex-wrap gap-4 text-sm">
-            {amenities.slice(0, 3).map(({ label, icon }, idx) => {
+          <div className="flex flex-wrap gap-2 sm:gap-3 text-[11px] sm:text-xs">
+            {amenities.slice(0, 3).map(({ icon }, idx) => {
               const Icon = iconMap[icon];
               return (
                 <span
                   key={idx}
-                  className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium flex items-center gap-1"
+                  className="bg-orange-100 text-orange-700 px-2 py-[2px] rounded-full font-medium flex items-center gap-1"
                 >
-                  {Icon && <Icon size={16} />}
-                  {label}
+                  {Icon && <Icon size={12} />}
+                  {/* {label} */}
                 </span>
               );
             })}
             {amenities.length > 3 && (
-              <span className="text-gray-500 text-sm flex items-center">
+              <span className="text-gray-500 flex items-center">
                 ...+{amenities.length - 3} more
               </span>
             )}
           </div>
 
           {/* Price & Contact */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-t border-gray-200 pt-2">
+          <div className="flex sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-5 border-t border-gray-200 pt-2">
             <div>
-              <p className="text-xl font-bold text-green-700">{price}</p>
-              <p className="text-sm text-gray-500">Available Now</p>
+              <p className="text-sm sm:text-base font-bold text-green-700">
+                {price}
+              </p>
+              <p className="text-[11px] sm:text-xs text-gray-500">
+                Available Now
+              </p>
             </div>
 
-            <div className="text-sm text-gray-700 space-y-2 text-right">
-              <p className="flex items-center justify-end gap-3 font-medium">
-                <Phone size={20} className="text-gray-400" />
-                {phone}
-              </p>
-              <button className="flex items-center gap-2 text-blue-600 hover:underline hover:text-blue-800 font-semibold transition">
-                <Info size={20} className="text-blue-600" />
-                View Details
-              </button>
-            </div>
+            <button
+              onClick={toggleWishlist}
+              aria-label={
+                wishlisted ? "Remove from wishlist" : "Add to wishlist"
+              }
+              className="flex items-center gap-1 text-orange-600 hover:text-orange-700 font-semibold transition"
+            >
+              <Heart
+                size={20}
+                fill={wishlisted ? "#f97316" : "none"}
+                stroke={wishlisted ? "#f97316" : "#9ca3af"}
+                strokeWidth={2}
+                className={`transition-transform duration-200 ${
+                  wishlisted ? "scale-110" : "scale-100 hover:scale-105"
+                }`}
+              />
+              {/* {wishlisted ? "Wishlisted" : "Add to Wishlist"} */}
+            </button>
           </div>
         </div>
       </div>
