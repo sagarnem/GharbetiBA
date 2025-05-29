@@ -34,7 +34,7 @@ export default function ChangePassword() {
         }
       );
       toast.success('Password changed successfully! Please login again.');
-      logout();
+      // logout();
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(

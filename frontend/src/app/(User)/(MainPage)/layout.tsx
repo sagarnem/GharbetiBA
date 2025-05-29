@@ -12,6 +12,8 @@ import { useParams, useRouter } from "next/navigation";
 import { listings } from "../../../data/data";
 import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
+import { AuthProvider } from "@/context/AuthContext";
+import UserSidebar from "@/app/components/dashboard/sidebar";
 const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
@@ -92,6 +94,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
+      <UserSidebar/>
       {/* Hero Section */}
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
         <div className=" w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">

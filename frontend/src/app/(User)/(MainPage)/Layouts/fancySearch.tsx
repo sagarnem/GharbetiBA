@@ -1,6 +1,6 @@
-import { Pencil, MapPin, Search, Home, DollarSign } from "lucide-react";
+import { Pencil, MapPin, Search} from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import PropertyTypeDropdown from "@/app/components/propertytypedropdown";
 import BudgetDropdown from "@/app/components/budgetdropdown";
 export default function HeroSearchSection() {
@@ -20,15 +20,16 @@ export default function HeroSearchSection() {
       params.append("category", propertyType);
     }
     if (budget) {
-      if (budget === "Below Rs. 10,000") {
-        params.append("max_price", "9999");
-      } else if (budget === "Rs. 10,000 - 20,000") {
-        params.append("min_price", "10000");
-        params.append("max_price", "20000");
-      } else if (budget === "Above Rs. 20,000") {
-        params.append("min_price", "20001");
-      }
+    if (budget === "below_10000") {
+      params.append("max_price", "9999");
+    } else if (budget === "10000_20000") {
+      params.append("min_price", "10000");
+      params.append("max_price", "20000");
+    } else if (budget === "above_20000") {
+      params.append("min_price", "20001");
     }
+  }
+
 
     fetch(`${baseUrl}/api/post/active-posts/?${params.toString()}`);
     // OR fetch directly if you're loading data here
