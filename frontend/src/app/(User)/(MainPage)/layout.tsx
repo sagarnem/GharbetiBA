@@ -12,8 +12,8 @@ import { useParams, useRouter } from "next/navigation";
 import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
 import { fetchListings } from "@/data/data";
-
-const PAGE_SIZE = 2;
+import UserSidebar from "@/app/components/dashboard/sidebar";
+const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -83,96 +83,99 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     };
   }, [loadMoreListings]);
 
-const handleListingClick = (listing: Listing) => {
-  setSelected(listing.slug);
-  router.replace(`/${encodeURIComponent(listing.slug)}`, {
-    scroll: false,
-  });
-  if (window.innerWidth < 768) {
-    setModalOpen(true);
-  }
-};
+  const handleListingClick = (listing: Listing) => {
+    setSelected(listing.slug);
+    router.replace(`/${encodeURIComponent(listing.slug)}`, {
+      scroll: false,
+    });
+    if (window.innerWidth < 768) {
+      setModalOpen(true);
+    }
+  };
 
   return (
     <div className="max-w-[1320px] w-full mx-auto px-2 sm:px-4">
-      {/* Banner */}
-      <div className="w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">
-        <p className="text-base md:text-lg font-medium text-orange-800">
-          Your Banner Ad Here
-        </p>
-      </div>
-
-      {/* Search Section */}
-      <HeroSearchSection />
-
-      {/* Listings and Detail Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-        {/* Sidebar - Listings */}
-        <div className="overflow-y-auto">
-          {visibleListings.map((listing) => (
-            <section
-              key={listing.slug}
-              onClick={() => handleListingClick(listing)}
-              className={`cursor-pointer border rounded mb-2 ${
-                listing.slug === selected
-                  ? "border-orange-500 border-2 bg-orange-50"
-                  : "border-gray-300"
-              }`}
-            >
-              <ContentCard {...listing} />
-            </section>
-          ))}
-          {visibleListings.length < allListings.length && (
-            <p className="text-center text-gray-500 py-4">Loading more...</p>
-          )}
+      {/* Hero Section */}
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+        <div className=" w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">
+          <p className="text-base md:text-lg font-medium text-orange-800">
+            Your Banner Ad Here
+          </p>
         </div>
 
-        {/* Main Detail View - Desktop */}
-        <div className="hidden md:block sticky top-28 self-start h-fit max-h-[80vh]">
-          {children}
-        </div>
-      </div>
+        {/* Search Section */}
+        <HeroSearchSection />
 
-      {/* Modal for Mobile */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black bg-opacity-70 backdrop-blur-sm p-4 sm:p-6 overflow-auto"
-          onClick={() => setModalOpen(false)}
-        >
-          <div
-            className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-lg relative flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minHeight: "300px" }}
-          >
-            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-2"></div>
-
-            <button
-              onClick={() => setModalOpen(false)}
-              aria-label="Close modal"
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 active:bg-gray-300 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-600 hover:text-gray-800"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+        {/* Listings and Detail Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          {/* Sidebar - Listings */}
+          <div className="overflow-y-auto">
+            {visibleListings.map((listing) => (
+              <section
+                key={listing.slug}
+                onClick={() => handleListingClick(listing)}
+                className={`cursor-pointer border rounded mb-2 ${
+                  listing.slug === selected
+                    ? "border-orange-500 border-2 bg-orange-50"
+                    : "border-gray-300"
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                <ContentCard {...listing} />
+              </section>
+            ))}
+            {visibleListings.length < allListings.length && (
+              <p className="text-center text-gray-500 py-4">Loading more...</p>
+            )}
+          </div>
 
-            <div className="px-5 pb-6 pt-2 text-gray-900 text-sm sm:text-base leading-relaxed tracking-normal">
-              {children}
-            </div>
+          {/* Main Detail View - Desktop */}
+          <div className="hidden md:block sticky top-28 self-start h-fit max-h-[80vh]">
+            {children}
           </div>
         </div>
-      )}
+        <UserSidebar />
+
+        {/* Modal for Mobile */}
+        {modalOpen && (
+          <div
+            className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black bg-opacity-70 backdrop-blur-sm p-4 sm:p-6 overflow-auto"
+            onClick={() => setModalOpen(false)}
+          >
+            <div
+              className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-lg relative flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+              style={{ minHeight: "300px" }}
+            >
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-2"></div>
+
+              <button
+                onClick={() => setModalOpen(false)}
+                aria-label="Close modal"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 active:bg-gray-300 transition"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-600 hover:text-gray-800"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              <div className="px-5 pb-6 pt-2 text-gray-900 text-sm sm:text-base leading-relaxed tracking-normal">
+                {children}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
