@@ -1,15 +1,22 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ContentDescription from "../Layouts/ContentDescription";
 import { useParams } from "next/navigation";
-import {  descriptions } from "../../../../data/data";
+import { Listing } from "@/types/listing";
+import { fetchListings } from "@/data/data";
 
 export default function RoomDetailPage() {
   const params = useParams();
   const slug = decodeURIComponent((params?.slug as string) || "");
 
-  // Find description by slug directly
-  const description = descriptions.find((desc) => desc.slug === slug);
+  const [description, setDescription] = useState<Listing | null>(null);
+
+  useEffect(() => {
+    fetchListings().then((listings) => {
+      const item = listings.find((desc) => desc.slug === slug);
+      setDescription(item || null);
+    });
+  }, [slug]);
 
   if (!description) {
     return (
@@ -19,9 +26,5 @@ export default function RoomDetailPage() {
     );
   }
 
-  return (
-    <div className="p-4">
-      <ContentDescription {...description} />
-    </div>
-  );
+  return <ContentDescription {...description} />;
 }

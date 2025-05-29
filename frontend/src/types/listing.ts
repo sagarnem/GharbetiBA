@@ -1,6 +1,10 @@
+// types/listing.ts
+
+import { LucideIcon } from "lucide-react";
+
 export interface Amenity {
   label: string;
-  icon: string; // You could use a union type if icons are limited, e.g., "Sofa" | "Wifi" | ...
+  icon?: LucideIcon | null;
 }
 
 export interface Listing {
@@ -10,5 +14,10 @@ export interface Listing {
   price: string;
   phone: string;
   images: string[];
+  description: string[];             // array of description paragraphs
   amenities: Amenity[];
+  rentalTerms: string[];
+  securityFacilities: string[];
+  availability: string;
+  contactNote: string;
 }

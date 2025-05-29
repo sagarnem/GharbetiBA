@@ -1,32 +1,13 @@
 "use client";
-import { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
-import { MapPin, Sofa, Wifi, Truck, Droplet, Heart } from "lucide-react";
+import { MapPin,  Heart,Smile } from "lucide-react";
 
-type Amenity = {
-  label: string;
-  icon: string;
-};
 
-type Props = {
-  title: string;
-  location: string;
-  price: string;
-  phone: string;
-  images: string[];
-  amenities: Amenity[];
-};
+// import { Amenity } from "@/types/listing";
+import { Listing } from "@/types/listing";
 
-// Map icon name strings to actual icon components
-const iconMap: Record<string, LucideIcon> = {
-  Sofa,
-  Droplet,
-  Wifi,
-  Truck,
-};
-
-const ContentCard = ({ title, location, price, images, amenities }: Props) => {
+const ContentCard = ({ title, location, price, images, amenities }: Listing) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [wishlisted, setWishlisted] = useState(false);
 
@@ -101,14 +82,14 @@ const ContentCard = ({ title, location, price, images, amenities }: Props) => {
           </p>
           {/* Amenities */}
           <div className="flex flex-wrap gap-2 sm:gap-3 text-[11px] sm:text-xs">
-            {amenities.slice(0, 3).map(({ icon }, idx) => {
-              const Icon = iconMap[icon];
+            {amenities.slice(0, 3).map(({icon: Icon }, idx) => {
+              // const Icon = iconMap[icon];
               return (
                 <span
                   key={idx}
                   className="bg-orange-100 text-orange-700 px-2 py-[2px] rounded-full font-medium flex items-center gap-1"
                 >
-                  {Icon && <Icon size={12} />}
+                  {Icon ? <Icon size={12} /> : <Smile  size={12} />}
                   {/* {label} */}
                 </span>
               );
