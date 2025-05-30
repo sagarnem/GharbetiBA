@@ -12,7 +12,6 @@ import { useParams, useRouter } from "next/navigation";
 import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
 import { fetchListings } from "@/data/data";
-import UserSidebar from "@/app/components/dashboard/sidebar";
 const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
@@ -133,7 +132,6 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
             {children}
           </div>
         </div>
-        <UserSidebar />
 
         {/* Modal for Mobile */}
         {modalOpen && (
