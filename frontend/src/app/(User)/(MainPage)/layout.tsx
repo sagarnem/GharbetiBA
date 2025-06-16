@@ -13,6 +13,7 @@ import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
 import { fetchListings } from "@/data/data";
 import MobileFooterNav from "./Layouts/MobilefooterNav";
+import { Filter } from "lucide-react";
 const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
@@ -108,8 +109,18 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
         {/* Listings and Detail Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+           
           {/* Sidebar - Listings */}
           <div className="overflow-y-auto">
+            <div className="flex justify-between">
+            <h3 className="text-xl font-semibold text-gray-900 my-2">{visibleListings.length} rooms available</h3>
+            
+             <button  className="flex items-center text-gray-800 rounded-md  border-gray-400 border p-1 m-2">
+                <Filter className="h-4 w-4" />
+                Filters
+              </button>
+            {/* {searchQuery && <p className="text-gray-600 mt-1">Results for "{searchQuery}"</p>} */}
+            </div>
             {visibleListings.map((listing) => (
               <section
                 key={listing.slug}
