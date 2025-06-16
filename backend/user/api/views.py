@@ -102,9 +102,13 @@ class LoginView(APIView):
             user = serializer.validated_data["user"]
             refresh = RefreshToken.for_user(user)
             return Response({
-                "message": "Login successful",
+               "message": "Login successful",
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
+                "user": {
+                    "email": user.email,
+                    "role": user.role,
+                }
             })
         return Response(serializer.errors, status=400)
 class RequestPasswordResetView(APIView):

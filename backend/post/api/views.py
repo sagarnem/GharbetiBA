@@ -33,15 +33,24 @@ class FrontendPostViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['title', 'location', 'category']
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().select_related('owner','amenities').prefetch_related('comments', 'images').order_by('-created_at')
     permission_classes = []
+
+    def get_queryset(self):
+        # Only return posts created by the logged-in user
+        user = self.request.user
+        if user.is_authenticated:
+            return Post.objects.filter(owner=user)\
+                .select_related('owner', 'amenities')\
+                .prefetch_related('comments', 'images')\
+                .order_by('-created_at')
+        return Post.objects.none()  # Unauthenticated users get nothing
 
     def get_permissions(self):
         if self.action == 'create':
             return [permissions.IsAuthenticated(), IsOwnerRole()]
         elif self.action in ['update', 'partial_update', 'destroy']:
             return [permissions.IsAuthenticated(), IsOwnerOrReadOnly()]
-        return [permissions.IsAuthenticatedOrReadOnly()]
+        return [permissions.IsAuthenticated()]  # Optional: restrict listing to logged-in users
 
     def get_serializer_class(self):
         return PostSerializer
@@ -65,6 +74,7 @@ class PostViewSet(viewsets.ModelViewSet):
         for img in images:
             PostImage.objects.create(post=post, image=img)
         return Response({"message": "Images uploaded"}, status=201)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-created_at')

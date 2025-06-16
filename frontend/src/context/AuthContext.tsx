@@ -9,7 +9,7 @@ interface User {
   avatar?: string;
 }
 interface AuthContextType {
-  user: any;
+  user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -51,12 +51,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { access, refresh, user: userData } = response.data;
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
+    localStorage.setItem('user', JSON.stringify(userData));
     // Fetch user data if needed
     // const userResponse = await axios.get('/api/user/');
     // setUser(userResponse.data);
 
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
+    console.log('User logged in:', userData);
     router.push('/dashboard');
   };
 

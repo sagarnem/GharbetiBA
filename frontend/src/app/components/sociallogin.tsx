@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -108,7 +108,7 @@ export default function SocialLogin() {
                 text="continue_with"
             />
 
-            <FacebookLogin
+            {/* <FacebookLogin
                 appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || ""}
                 callback={handleFacebookResponse}
                 render={(renderProps: any) => (
@@ -120,7 +120,7 @@ export default function SocialLogin() {
                         Continue with Facebook
                     </button>
                 )}
-            />
+            /> */}
         </div>
     );
 }

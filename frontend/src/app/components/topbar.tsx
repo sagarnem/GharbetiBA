@@ -22,6 +22,7 @@ export default function Topbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  console.log('User:', user);
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="p-4 flex items-center justify-between">

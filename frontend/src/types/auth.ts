@@ -35,6 +35,7 @@ export interface ApiResponse {
   error?: string;
   access?: string;
   refresh?: string;
+  user:[];
 }
 
 export interface UserProfile {

@@ -2,11 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut, Home, PlusCircle, Heart, User, Key } from 'lucide-react';
+import { LogOut, Home, PlusCircle, Heart, User, Key, List } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-const navItems = [
-  { label: 'Dashboard', href: '/dashboard', icon: Home },
-  { label: 'Add Your Property', href: '/user/post', icon: PlusCircle },
+const baseNavItems = [
+  { label: 'Dashboard', href: '#', icon: Home },
+  { label: 'Add Your Property', href: '/user/create-post', icon: PlusCircle, roles: ['owner'] },
+  { label: 'Property Listing', href: '/user/post', icon: List, roles: ['owner'] },
   { label: 'Wishlist', href: '/dashboard/wishlist', icon: Heart },
   { label: 'Profile', href: '/user/profile', icon: User },
   { label: 'Change Password', href: '/user/change-password', icon: Key },
@@ -15,19 +17,38 @@ const navItems = [
 export default function UserSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [userType, setUserType] = useState<string | null>(null);
 
   const handleLogout = () => {
-    // Clear tokens or call your logout function
-    localStorage.removeItem('user'); // or call your API
-    // router.push('/login');
-  };
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('user');
+  router.push('/auth/login');
+};
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUserType(parsedUser?.role);
+      } catch (e) {
+        console.error('Invalid user object in localStorage');
+      }
+    }
+  }, []);
+
+  const filteredNavItems = baseNavItems.filter(item => {
+    if (!item.roles) return true; // visible to all
+    return userType && item.roles.includes(userType);
+  });
 
   return (
     <aside className="w-full md:w-64 bg-white shadow-md h-full md:min-h-screen p-4 space-y-6 border-r">
       <div className="text-2xl font-bold text-orange-600">My Dashboard</div>
 
       <nav className="space-y-1">
-        {navItems.map(({ label, href, icon: Icon }) => (
+        {filteredNavItems.map(({ label, href, icon: Icon }) => (
           <Link
             key={href}
             href={href}

@@ -26,11 +26,12 @@ export default function Login() {
         `${process.env.NEXT_PUBLIC_API_URL}/user/login/`,
         data
       );
-      const { access, refresh } = response.data;
+      const { access, refresh, user } = response.data;
 
       if (access && refresh) {
         localStorage.setItem('access_token', access);
         localStorage.setItem('refresh_token', refresh);
+        localStorage.setItem('user', JSON.stringify(user));
         toast.success('Login successful!');
         router.push('/dashboard');
       }
