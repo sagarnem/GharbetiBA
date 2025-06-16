@@ -168,7 +168,7 @@ import { Listing } from "@/types/listing";
 import { Sofa, Droplet, Wifi, Truck } from "lucide-react";
 
 export async function fetchListings(): Promise<Listing[]> {
-  await new Promise((res) => setTimeout(res, 500)); // simulate delay
+  await new Promise((res) => setTimeout(res, 0)); // simulate delay
 
   return [
     {

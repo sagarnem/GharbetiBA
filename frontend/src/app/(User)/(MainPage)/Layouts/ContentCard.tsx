@@ -14,6 +14,7 @@ const ContentCard = ({ title, location, price, images, amenities }: Listing) => 
   const toggleWishlist = () => setWishlisted(!wishlisted);
 
   return (
+    <>
     <div
       className="z-0
         max-w-4xl mx-auto rounded border border-gray-200
@@ -69,19 +70,18 @@ const ContentCard = ({ title, location, price, images, amenities }: Listing) => 
         <div className="p-1 pl-1.5 sm:p-4 flex flex-col justify-between gap-1.5 sm:gap-4 h-full rounded-r-2xl text-xs sm:text-sm">
           {/* Title & Location */}
           <div>
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-1 sm:gap-2">
+            <h2 className="text-[14px] sm:text-lg font-semibold text-gray-900 flex items-center gap-1 sm:gap-2 leading-4.5 sm:leading-normal line-clamp-1">
               {title}
             </h2>
-            <p className="text-[11px] sm:text-xs text-gray-600 flex items-center gap-0 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-gray-400 flex items-center gap-0 mt-0.5 sm:py-2">
               <MapPin size={14} className="text-gray-400" />
               {location}
             </p>
-          </div>
-          <p className="text-[11px] sm:text-xs text-gray-600 line-clamp-2">
+                <p className="text-[11px] sm:text-xs text-gray-600 line-clamp-2 p-0 my-0 sm:py-2">
             {title}
           </p>
-          {/* Amenities */}
-          <div className="flex flex-wrap gap-2 sm:gap-3 text-[11px] sm:text-xs">
+             {/* Amenities */}
+          <div className="flex flex-wrap gap-2 sm:gap-3 text-[11px] sm:text-xs py-2 ">
             {amenities.slice(0, 3).map(({icon: Icon }, idx) => {
               // const Icon = iconMap[icon];
               return (
@@ -100,16 +100,19 @@ const ContentCard = ({ title, location, price, images, amenities }: Listing) => 
               </span>
             )}
           </div>
+          </div>
+      
+       
 
           {/* Price & Contact */}
-          <div className="flex sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-5 border-t border-gray-200 pt-2">
+          <div className="flex sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-5 border-t border-gray-200 pt-1">
             <div>
               <p className="text-sm sm:text-base font-bold text-green-700">
                 {price}
               </p>
-              <p className="text-[11px] sm:text-xs text-gray-500">
+              {/* <p className="text-[11px] sm:text-xs text-gray-500">
                 Available Now
-              </p>
+              </p> */}
             </div>
 
             <button
@@ -120,7 +123,7 @@ const ContentCard = ({ title, location, price, images, amenities }: Listing) => 
               className="flex items-center gap-1 text-orange-600 hover:text-orange-700 font-semibold transition"
             >
               <Heart
-                size={20}
+                size={18}
                 fill={wishlisted ? "#f97316" : "none"}
                 stroke={wishlisted ? "#f97316" : "#9ca3af"}
                 strokeWidth={2}
@@ -134,6 +137,8 @@ const ContentCard = ({ title, location, price, images, amenities }: Listing) => 
         </div>
       </div>
     </div>
+    
+    </>
   );
 };
 

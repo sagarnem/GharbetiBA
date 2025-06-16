@@ -19,7 +19,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-
+import Image from "next/image";
 // import { Amenity } from "@/types/listing";
 import { Listing } from "@/types/listing";
 // interface ContentDescriptionProps {
@@ -47,6 +47,7 @@ type SectionId =
 
 export default function ContentDescription({
   title,
+  images,
   description,
   location,
   amenities,
@@ -68,6 +69,7 @@ export default function ContentDescription({
     []
   );
   const url = useMemo(() => `${process.env.NEXT_PUBLIC_COMPANY_URL}/${slug}`, [slug]);
+  const [selectedImage, setSelectedImage] = useState(images[0]);
 
   // Scroll handler with throttling
   const handleScroll = useCallback(() => {
@@ -239,10 +241,49 @@ export default function ContentDescription({
       </nav>
 
       {/* Content Sections */}
-      <div className="px-4">
+      <div className="px-4 py-2">
+             <div className="flex flex-col items-center bg-gray-50 h-full rounded overflow-hidden  relative">
+                  {/* Main Image */}
+                  <div className="w-full h-34 sm:h-50 aspect-video rounded overflow-hidden relative">
+                    <Image
+                      src={selectedImage}
+                      alt="Main"
+                      width={800}
+                      height={500}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition"></div>
+        
+                    {/* Thumbnail Selector - overlaid on bottom */}
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 bg-white/40 backdrop-blur-sm rounded px-2 py-1 overflow-x-auto max-w-[90%] no-scrollbar">
+                      {images.map((img, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setSelectedImage(img)}
+                          className={`w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden transition-all duration-200 
+                    ${
+                      selectedImage === img
+                        ? "border-2 border-orange-500 scale-110"
+                        : "border-2 border-transparent hover:border-gray-300 hover:scale-105"
+                    }
+                  `}
+                          aria-label={`Select image ${i + 1}`}
+                        >
+                          <Image
+                            src={img}
+                            alt={`Thumbnail ${i + 1}`}
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
         {/* Details Section */}
         <section id="details" className="scroll-mt-16">
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+          <h3 className="text-xl pt-4 font-extrabold text-gray-900 mb-4 pb-2 border-b border-gray-200">
             {title}
           </h3>
           <div className="space-y-4">
@@ -258,26 +299,26 @@ export default function ContentDescription({
         </section>
 
         {/* Location Section */}
-        <section id="location" className="scroll-mt-16">
-          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+        <section id="location" className="scroll-mt-16 my-3">
+          <h4 className="text-xl  font-semibold text-gray-900 ">
             Location
           </h4>
-          <div className="flex items-center gap-2 text-gray-600 bg-gray-50 p-3 rounded-lg">
+          <div className="flex items-center  text-gray-600  rounded-lg">
             <MapPin size={18} className="text-gray-400 flex-shrink-0" />
             <p className="text-sm sm:text-base">{location}</p>
           </div>
         </section>
 
         {/* Amenities Section */}
-        <section id="amenities" className="scroll-mt-16">
-          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+        <section id="amenities" className="scroll-mt-16 my-3">
+          <h4 className="text-xl  font-semibold text-gray-900 ">
             Key Amenities
           </h4>
           <ul className="flex flex-wrap ">
             {amenities.map(({ icon: Icon, label }, i) => (
               <li
                 key={i}
-                className="flex items-center gap-2  bg-orange-100 text-orange-700 px-2 mx-1 py-[2px] rounded-md font-medium w-fit"
+                className="flex items-center gap-2  bg-orange-100 text-orange-700 px-2 mx-1 py-[2px] rounded-md font-normal w-fit"
               >
                 {Icon ? <Icon size={12} /> : <Smile size={12} />}
 
@@ -288,24 +329,24 @@ export default function ContentDescription({
         </section>
 
         {/* Rental Terms Section */}
-        <section id="rental" className="scroll-mt-16">
-          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+        <section id="rental" className="scroll-mt-16 my-3">
+          <h4 className="text-xl  font-semibold text-gray-900">
             Rental Terms
           </h4>
           {renderListItems(rentalTerms)}
         </section>
 
         {/* Security Section */}
-        <section id="security" className="scroll-mt-16">
-          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+        <section id="security" className="scroll-mt-16 my-3">
+          <h4 className="text-xl font-semibold text-gray-900">
             Security & Facilities
           </h4>
           {renderListItems(securityFacilities)}
         </section>
 
         {/* Price Section */}
-        <section id="price" className="scroll-mt-16">
-          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+        <section id="price" className="scroll-mt-16 my-3">
+          <h4 className="text-xl font-semibold text-gray-900 ">
             Price & Availability
           </h4>
           <div className="bg-green-50 p-4 rounded-lg">
@@ -317,8 +358,8 @@ export default function ContentDescription({
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="scroll-mt-16">
-          <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+        <section id="contact" className="scroll-mt-16 my-3">
+          <h4 className="text-xl  font-semibold text-gray-900">
             Contact Information
           </h4>
           <div className="space-y-3 bg-blue-50 p-4 rounded-lg">

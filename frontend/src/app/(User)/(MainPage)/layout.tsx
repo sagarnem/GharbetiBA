@@ -12,6 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
 import { fetchListings } from "@/data/data";
+import MobileFooterNav from "./Layouts/MobilefooterNav";
 const PAGE_SIZE = 10;
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
@@ -136,7 +137,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
         {/* Modal for Mobile */}
         {modalOpen && (
           <div
-            className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black bg-opacity-70 backdrop-blur-sm p-4 sm:p-6 overflow-auto"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black/5 bg-opacity-70 backdrop-blur-sm p-4 sm:p-6 "
             onClick={() => setModalOpen(false)}
           >
             <div
@@ -149,14 +150,14 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               <button
                 onClick={() => setModalOpen(false)}
                 aria-label="Close modal"
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 active:bg-gray-300 transition"
+                className="bg-red-500 absolute top-1 right-4 p-0.5 rounded-full hover:bg-gray-200 active:bg-gray-300 transition"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-600 hover:text-gray-800"
+                  className="h-4 w-4 text-white-600 hover:text-gray-800"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  stroke="white"
                   strokeWidth={2}
                 >
                   <path
@@ -167,13 +168,14 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 </svg>
               </button>
 
-              <div className="px-5 pb-6 pt-2 text-gray-900 text-sm sm:text-base leading-relaxed tracking-normal">
+              <div className="px-0 pb-6 pt-2 text-gray-900 text-sm sm:text-base leading-relaxed tracking-normal">
                 {children}
               </div>
             </div>
           </div>
         )}
       </div>
+      <MobileFooterNav/>
     </div>
   );
 }
