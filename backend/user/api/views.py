@@ -40,7 +40,10 @@ class RegisterView(APIView):
 
             send_otp_email(email, "register")
             return Response({"message": "OTP sent. Please verify your email."}, status=200)
-
+        else:
+        # If serializer is not valid, print the errors for debugging
+            print("Serializer errors:", serializer.errors)
+        # This will help you see what went wrong in the request data
         return Response(serializer.errors, status=400)
 
 
