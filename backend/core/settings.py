@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # installed app 
     'user',
     'post',
+    'bill',
 
     # 3rd party apps
     'rest_framework',

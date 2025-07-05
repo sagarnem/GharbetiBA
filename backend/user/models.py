@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from datetime import date
 import random
 import string
 
@@ -61,6 +62,14 @@ class UserProfile(models.Model):
     location = models.CharField(max_length=255, blank=True)
     photo = models.ImageField(upload_to='user_photos/', null=True, blank=True)
     bio = models.TextField(blank=True)
+    # subscription fields
+    subscription_active = models.BooleanField(default=False)
+    subscription_expires_at = models.DateField(null=True, blank=True)
+    qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
+
+    @property
+    def has_active_subscription(self):
+        return self.subscription_active and (self.subscription_expires_at is None or self.subscription_expires_at >= date.today())
 
     def __str__(self):
         return f"Profile of {self.user.email}"
@@ -80,5 +89,31 @@ class OTP(models.Model):
 
     def is_expired(self):
         return self.created_at < timezone.now() - timedelta(minutes=10)
+    
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    purchased_at = models.DateTimeField(auto_now_add=True)
+    valid_until = models.DateField()
+    payment_reference = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.valid_until}"
+    
+
+def activate_subscription(user, months=1):
+    today = timezone.now().date()
+
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    
+    if profile.subscription_expires_at and profile.subscription_expires_at > today:
+        profile.subscription_expires_at += timedelta(days=30 * months)
+    else:
+        profile.subscription_expires_at = today + timedelta(days=30 * months)
+
+    profile.subscription_active = True
+    profile.save()
+
+
 
 
