@@ -37,6 +37,8 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
           <AuthProvider>
+
+        
           <header className="top-0 sticky z-30">
             <Topbar />
           </header>
@@ -54,6 +56,7 @@ export default function RootLayout({
           <ToastContainer position="top-right" autoClose={3000} />
         </AuthProvider>
         </GoogleOAuthProvider>
+
       </body>
     </html>
   );

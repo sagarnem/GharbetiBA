@@ -3,6 +3,7 @@ import { createContext, useContext, ReactNode, useState, useEffect } from 'react
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
+
 interface User {
   id: number;
   email: string;
@@ -13,6 +14,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  socialLogin: (userData: User, access: string, refresh: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -53,6 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadUser();
   }, []);
 
+const socialLogin = (userData: User, access: string, refresh: string) => {
+  localStorage.setItem("access_token", access);
+  localStorage.setItem("refresh_token", refresh);
+  localStorage.setItem("user", JSON.stringify(userData));
+  setUser(userData);
+};
+
+
   const login = async (email: string, password: string) => {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login/`, {
       email,
@@ -87,6 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         login,
         logout,
+        socialLogin,
         isAuthenticated: !!user,
       }}
     >

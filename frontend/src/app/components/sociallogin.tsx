@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 // import { FcGoogle } from "react-icons/fc";
 // import { FaFacebookF } from "react-icons/fa";
 import { CredentialResponse } from "@react-oauth/google";
+import { useAuth } from "@/context/AuthContext";
 export default function SocialLogin() {
     const router = useRouter();
+    const {socialLogin} = useAuth();
     const [selectedRole, setSelectedRole] = useState("tenant");
 
     const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
@@ -28,8 +30,7 @@ export default function SocialLogin() {
                 router.push(`/auth/verify-otp?email=${data.email}&purpose=social_login`);
                 toast.info("OTP verification required");
             } else {
-                localStorage.setItem("access_token", data.access);
-                localStorage.setItem("refresh_token", data.refresh);
+                socialLogin(data.user, data.access, data.refresh);
                 toast.success("Logged in with Google");
                 router.push("/dashboard");
             }

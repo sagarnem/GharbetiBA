@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from weasyprint import HTML
+# from weasyprint import HTML
 import tempfile
 from decimal import Decimal
 from django.conf import settings
