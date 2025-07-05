@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'user',
     'post',
     'mediaExplorer',
-    
+        'bill',
+
     # 3rd party apps
     'rest_framework',
     "corsheaders",

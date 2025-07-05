@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h2 { text-align: center; }
+        .details, .amounts { margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h2>Monthly Rent Invoice</h2>
+    <p><strong>Tenant:</strong> {{ bill.tenant.full_name }}</p>
+    <p><strong>Month:</strong> {{ bill.month|date:"F Y" }}</p>
+    <p><strong>Due Date:</strong> {{ bill.due_date }}</p>
+
+    <div class="amounts">
+        <table>
+            <tr><th>Description</th><th>Amount</th></tr>
+            <tr><td>Room Rent</td><td>₹{{ bill.rent_amount }}</td></tr>
+            <tr><td>Electricity</td><td>₹{{ bill.electricity_bill }}</td></tr>
+            <tr><td>Water</td><td>₹{{ bill.water_bill }}</td></tr>
+            <tr><td>Waste Management</td><td>₹{{ bill.waste_management_bill }}</td></tr>
+            <tr><th>Total</th><th>₹{{ bill.total_amount }}</th></tr>
+        </table>
+    </div>
+
+    <p>Thank you for your payment.</p>
+</body>
+</html>
