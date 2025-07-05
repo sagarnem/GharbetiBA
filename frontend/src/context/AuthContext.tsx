@@ -1,5 +1,6 @@
+'use client';
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 interface User {
@@ -32,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           // You might want to add an endpoint to verify token and get user info
           // const response = await axios.get('/api/user/');
-          // setUser(response.data);
+           setUser(JSON.parse(userData));
         } catch (error) {
 
           if (axios.isAxiosError(error) && error.response?.status === 401) {

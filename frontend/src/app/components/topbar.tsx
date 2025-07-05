@@ -8,11 +8,11 @@ import {
 } from 'lucide-react';
 
 export default function Topbar() {
-  const { user, logout } = useAuth();
+  const { user,loading, logout } = useAuth();
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -23,6 +23,7 @@ export default function Topbar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+  if (loading) return null;
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">

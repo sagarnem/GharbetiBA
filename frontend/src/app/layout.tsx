@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Topbar from "./components/topbar";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
+          <AuthProvider>
           <header className="top-0 sticky z-30">
             <Topbar />
           </header>
@@ -50,6 +52,7 @@ export default function RootLayout({
             </p>
           </footer>
           <ToastContainer position="top-right" autoClose={3000} />
+        </AuthProvider>
         </GoogleOAuthProvider>
       </body>
     </html>
