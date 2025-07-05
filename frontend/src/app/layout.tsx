@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Topbar from "./components/topbar";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -38,7 +39,7 @@ export default function RootLayout({
             <Topbar />
           </header>
 
-          <div className="min-h-[80vh] bg-gray-100   py-6  ">
+          <div className="min-h-[80vh] bg-gradient-to-b from-blue-100/95 to-orange-100 ">
             {children}
           </div>
 

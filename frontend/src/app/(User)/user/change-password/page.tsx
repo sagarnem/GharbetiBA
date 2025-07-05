@@ -4,10 +4,10 @@ import axios, { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { ChangePasswordFormData, ApiResponse } from '@/types/auth';
-import { useAuth } from '@/context/AuthContext';
+// import { useAuth } from '@/context/AuthContext';
 import { useWatch } from 'react-hook-form';
 
 export default function ChangePassword() {

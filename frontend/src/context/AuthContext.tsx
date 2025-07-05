@@ -34,8 +34,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // const response = await axios.get('/api/user/');
           // setUser(response.data);
         } catch (error) {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
+
+          if (axios.isAxiosError(error) && error.response?.status === 401) {
+            // If token is invalid, clear local storage and redirect to login
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('user');
+            setUser(null);
+            router.push('/auth/login');
+          } else {
+            console.error('Failed to load user:', error);
+          }
         }
       }
       setLoading(false);
@@ -58,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-    console.log('User logged in:', userData);
+    // console.log('User logged in:', userData);
     router.push('/dashboard');
   };
 

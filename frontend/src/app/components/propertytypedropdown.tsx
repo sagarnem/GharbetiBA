@@ -29,14 +29,17 @@ const categoryOptions = [
   { value: 'warehouse', label: 'Warehouse/Godown' },
   { value: 'industrial_building', label: 'Industrial Building' },
 ];
-
-function PropertyTypeDropdown({ value, onChange }) {
+interface PropertyDropdownProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+function PropertyTypeDropdown({ value, onChange }: PropertyDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    function onClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    function onClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -44,12 +47,12 @@ function PropertyTypeDropdown({ value, onChange }) {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  const handleSelect = (val) => {
+  const handleSelect = (val:string) => {
     onChange(val);
     setIsOpen(false);
   };
 
-  const getLabel = (val) => {
+  const getLabel = (val: string) => {
     const option = categoryOptions.find((opt) => opt.value === val);
     return option ? option.label : "Property Type";
   };

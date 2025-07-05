@@ -1,13 +1,13 @@
 "use client";
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios, { AxiosError } from 'axios';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import Head from 'next/head';
-import Link from 'next/link';
-import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
-import { LoginFormData, ApiResponse } from '@/types/auth';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import Head from "next/head";
+import Link from "next/link";
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import { LoginFormData, ApiResponse } from "@/types/auth";
 import SocialLogin from "../../components/sociallogin";
 
 export default function Login() {
@@ -26,19 +26,20 @@ export default function Login() {
         `${process.env.NEXT_PUBLIC_API_URL}/user/login/`,
         data
       );
+
       const { access, refresh, user } = response.data;
 
       if (access && refresh) {
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
-        localStorage.setItem('user', JSON.stringify(user));
-        toast.success('Login successful!');
-        router.push('/dashboard');
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
+        localStorage.setItem("user", JSON.stringify(user));
+        toast.success("Login successful!");
+        router.push("/user/profile");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(
-        axiosError.response?.data?.error || 'Login failed. Please try again.'
+        axiosError.response?.data?.error || "Login failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -61,7 +62,7 @@ export default function Login() {
                   Sign in to your account
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-600">
-                  Or{' '}
+                  Or{" "}
                   <Link href="/auth/register">
                     <span className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer">
                       create a new account
@@ -69,7 +70,10 @@ export default function Login() {
                   </Link>
                 </p>
               </div>
-              <form className="space-y-6 mt-6" onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className="space-y-6 mt-6"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <div>
                   <label
                     htmlFor="email"
@@ -85,14 +89,16 @@ export default function Login() {
                       id="email"
                       type="email"
                       autoComplete="email"
-                      {...register('email', { required: 'Email is required' })}
+                      {...register("email", { required: "Email is required" })}
                       className={`block w-full pl-10 pr-3 py-2 border ${
-                        errors.email ? 'border-red-300' : 'border-gray-300'
+                        errors.email ? "border-red-300" : "border-gray-300"
                       } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                     />
                   </div>
                   {errors.email && (
-                    <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
 
@@ -111,14 +117,18 @@ export default function Login() {
                       id="password"
                       type="password"
                       autoComplete="current-password"
-                      {...register('password', { required: 'Password is required' })}
+                      {...register("password", {
+                        required: "Password is required",
+                      })}
                       className={`block w-full pl-10 pr-3 py-2 border ${
-                        errors.password ? 'border-red-300' : 'border-gray-300'
+                        errors.password ? "border-red-300" : "border-gray-300"
                       } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                     />
                   </div>
                   {errors.password && (
-                    <p className="mt-2 text-sm text-red-600">{errors.password.message}</p>
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.password.message}
+                    </p>
                   )}
                 </div>
 
@@ -152,24 +162,23 @@ export default function Login() {
                     type="submit"
                     disabled={loading}
                     className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                      loading ? 'opacity-70 cursor-not-allowed' : ''
+                      loading ? "opacity-70 cursor-not-allowed" : ""
                     }`}
                   >
-                    {loading ? 'Signing in...' : 'Sign in'}
+                    {loading ? "Signing in..." : "Sign in"}
                   </button>
                 </div>
               </form>
             </div>
 
             {/* Vertical divider with OR */}
-      <div className="hidden sm:flex flex-col justify-center items-center px-4">
-        <div className="relative w-px bg-gray-300 h-full">
-          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-gray-500 text-sm font-medium">
-            OR
-          </span>
-        </div>
-      </div>
-
+            <div className="hidden sm:flex flex-col justify-center items-center px-4">
+              <div className="relative w-px bg-gray-300 h-full">
+                <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-gray-500 text-sm font-medium">
+                  OR
+                </span>
+              </div>
+            </div>
 
             {/* Right: Social Login */}
             <div className="sm:w-1/2 flex items-center justify-center">

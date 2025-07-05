@@ -25,7 +25,7 @@ export default function ProfileForm() {
   const watchedPhoto = watch("photo");
 
   useEffect(() => {
-    if (watchedPhoto && watchedPhoto.length > 0) {
+    if (watchedPhoto instanceof FileList && watchedPhoto.length > 0) {
       const file = watchedPhoto[0];
       setPhotoPreview(URL.createObjectURL(file));
     }
@@ -51,19 +51,29 @@ export default function ProfileForm() {
         const profile = res.data;
         setIsEditing(true);
         Object.entries(profile).forEach(([key, value]) => {
-          if (key !== "photo") setValue(key as keyof UserProfile, value);
+          if (key !== "photo"){
+if (
+      typeof value === "string" || 
+      typeof value === "number" || 
+      value === null || 
+      value === undefined
+    ) {
+      setValue(key as keyof UserProfile, value);
+    }
+
+          }
         });
         if (profile.photo) {
           setPhotoPreview(profile.photo); // Assuming API returns photo URL
         }
-      } catch (error: any) {
-        if (error.response?.status === 404) {
-          setIsEditing(false);
-        } else if (error.response?.status === 401) {
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
           toast.error("Session expired. Please login again.");
           localStorage.removeItem("access_token");
           router.push("/auth/login");
         } else {
+          setIsEditing(false);
+
           toast.error("Failed to load profile");
         }
       }
@@ -82,17 +92,23 @@ export default function ProfileForm() {
 
     try {
       const formData = new FormData();
-      for (const key in data) {
+
+      Object.entries(data).forEach(([key, value]) => {
         if (key === "photo") {
-          const files = data.photo;
+          const files = value as FileList;
           if (files && files.length > 0) {
             formData.append("photo", files[0]);
           }
+        } else if (typeof value === "string" || typeof value === "number") {
+          formData.append(key, value.toString());
+        } else if (value instanceof File) {
+          formData.append(key, value);
+        } else if (value === null || value === undefined) {
+          // Skip null or undefined
         } else {
-          // @ts-ignore
-          if (data[key]) formData.append(key, data[key]);
+          formData.append(key, String(value));
         }
-      }
+      });
 
       const config = {
         headers: {
@@ -116,19 +132,30 @@ export default function ProfileForm() {
         );
         toast.success("Profile created!");
       }
+
       router.push("/dashboard");
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error.response?.data?.error || "Failed to save profile. Try again."
-      );
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        toast.error("Session expired. Please login again.");
+        localStorage.removeItem("access_token");
+        router.push("/auth/login");
+        return;
+      }
+      // Handle other errors
+      setPhotoPreview(null); // Reset photo preview on error
+      setValue("photo", null); // Reset photo input
+      toast.error("Failed to save profile. Please try again.");
+      console.error("Profile save error:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Error response:", error.response.data);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
+    <div className="max-w-4xl mx-auto py-10 px-4 ">
       <h2 className="text-3xl font-semibold mb-8 text-center">
         {isEditing ? "Edit Profile" : "Create Profile"}
       </h2>
@@ -172,7 +199,10 @@ export default function ProfileForm() {
         {/* Form fields */}
         <div className="flex-1 space-y-5">
           <div>
-            <label className="block text-gray-700 mb-1 font-medium" htmlFor="full_name">
+            <label
+              className="block text-gray-700 mb-1 font-medium"
+              htmlFor="full_name"
+            >
               Full Name
             </label>
             <input

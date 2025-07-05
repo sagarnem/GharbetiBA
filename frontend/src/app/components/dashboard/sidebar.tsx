@@ -2,11 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut, Home, PlusCircle, Heart, User, Key, List } from 'lucide-react';
+import { LogOut, Home, PlusCircle, Heart, User, Key, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+interface UserSidebarProps {
+  isOpen: boolean;
+  toggleSidebar: () => void;
+}
+
 const baseNavItems = [
-  { label: 'Dashboard', href: '#', icon: Home },
+  { label: 'Dashboard', href: '/user/post', icon: Home },
   { label: 'Add Your Property', href: '/user/create-post', icon: PlusCircle, roles: ['owner'] },
   { label: 'Property Listing', href: '/user/post', icon: List, roles: ['owner'] },
   { label: 'Wishlist', href: '/dashboard/wishlist', icon: Heart },
@@ -14,17 +19,17 @@ const baseNavItems = [
   { label: 'Change Password', href: '/user/change-password', icon: Key },
 ];
 
-export default function UserSidebar() {
+export default function UserSidebar({ isOpen, toggleSidebar }: UserSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [userType, setUserType] = useState<string | null>(null);
 
   const handleLogout = () => {
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('user');
-  router.push('/auth/login');
-};
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    router.push('/auth/login');
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -32,22 +37,38 @@ export default function UserSidebar() {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUserType(parsedUser?.role);
-      } catch (e) {
-        console.error('Invalid user object in localStorage');
+      } catch (error) {
+        setUserType(null);
+        console.error('Error parsing user data from localStorage:', error);
       }
     }
   }, []);
 
   const filteredNavItems = baseNavItems.filter(item => {
-    if (!item.roles) return true; // visible to all
+    if (!item.roles) return true;
     return userType && item.roles.includes(userType);
   });
 
   return (
-    <aside className="w-full md:w-64 bg-white shadow-md h-full md:min-h-screen p-4 space-y-6 border-r">
-      <div className="text-2xl font-bold text-orange-600">My Dashboard</div>
+    <aside
+      className={`bg-white shadow-md h-full p-4 border-r transition-all duration-300 flex flex-col ${
+        isOpen ? 'w-64' : 'w-20'
+      }`}
+    >
+      {/* Toggle Button */}
+      <div className="flex justify-end">
+        <button onClick={toggleSidebar} className="text-gray-600 hover:text-orange-600">
+          {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+        </button>
+      </div>
 
-      <nav className="space-y-1">
+      {/* Title */}
+      {isOpen && (
+        <div className="text-2xl font-bold text-orange-600 mb-6 whitespace-nowrap">My Dashboard</div>
+      )}
+
+      {/* Navigation */}
+      <nav className="space-y-1 flex-1">
         {filteredNavItems.map(({ label, href, icon: Icon }) => (
           <Link
             key={href}
@@ -57,17 +78,18 @@ export default function UserSidebar() {
             }`}
           >
             <Icon className="w-5 h-5 mr-3" />
-            {label}
+            {isOpen && <span>{label}</span>}
           </Link>
         ))}
       </nav>
 
+      {/* Logout Button */}
       <button
         onClick={handleLogout}
-        className="flex items-center w-full px-4 py-2 mt-8 text-red-600 hover:bg-red-100 rounded-md transition"
+        className="flex items-center w-full px-4 py-2 mt-4 text-red-600 hover:bg-red-100 rounded-md transition"
       >
         <LogOut className="w-5 h-5 mr-3" />
-        Log Out
+        {isOpen && <span>Log Out</span>}
       </button>
     </aside>
   );

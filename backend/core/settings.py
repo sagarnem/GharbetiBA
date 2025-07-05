@@ -46,14 +46,15 @@ INSTALLED_APPS = [
     # installed app 
     'user',
     'post',
-    'bill',
+    'mediaExplorer',
+        'bill',
 
     # 3rd party apps
     'rest_framework',
     "corsheaders",
     'rest_framework_simplejwt',
     'social_django',
-    'django_filters'
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000',]
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000','https://gharbhetiba.mantracodex.com']
 CORS_ALLOW_HEADERS = [
     'x-api-key',  # Allow X-API-KEY header
     'content-type',
@@ -169,14 +170,30 @@ DATABASES = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
-# EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
-# EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-# EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
-# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = os.getenv("EMAIL_HOST")       # SMTP server
+EMAIL_PORT = os.getenv("EMAIL_PORT")                              # SMTP SSL port
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")                            # You're using SSL, not TLS
+# EMAIL_USE_TLS = False                             # Must be False if using SSL
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # Your email address
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")        # Replace with real password
+
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+# email sending
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'mail.assuredtraveltours.com'
+# EMAIL_PORT = 465
+# EMAIL_USE_SSL = True
+# # EMAIL_USE_TLS = False
+# EMAIL_HOST_USER = 'sales@assuredtraveltours.com'
+# EMAIL_HOST_PASSWORD = "94,XVh^J!*6("
+# DEFAULT_FROM_EMAIL = 'Assured Travel <sales@assuredtraveltours.com>'
+
+
 
 
 # Password validation

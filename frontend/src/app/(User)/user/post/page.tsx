@@ -16,10 +16,10 @@ export default function ListingsDashboard() {
     const [totalPages, setTotalPages] = useState(1);
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
-    const BaseURL = "http://localhost:8000/api/"
+    const BaseURL = process.env.NEXT_PUBLIC_API_URL
         const fetchListings = async (page = 1) => {
             try {
-                const res = await fetch(`${BaseURL}post/posts/?page=${page}`, {
+                const res = await fetch(`${BaseURL}/post/posts/?page=${page}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`, // Or use cookies/session if SSR
                     },
@@ -43,7 +43,7 @@ export default function ListingsDashboard() {
 const deletePost = async (id: number, token: string | null) => {
   if (!token) return;
 
-  await fetch(`${BaseURL}post/posts/${id}/`, {
+  await fetch(`${BaseURL}/post/posts/${id}/`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -81,7 +81,7 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
                 <div className="text-center text-gray-600">Loading listings...</div>
             ) : listings.length === 0 ? (
                 <div className="text-center text-gray-700 border border-dashed border-gray-300 rounded-md p-10">
-                    <p className="mb-4">You don't have any listings yet.</p>
+                    <p className="mb-4">You don&apos;t have any listings yet.</p>
                     <Link
                         href="/user/create-post"
                         className="inline-block bg-green-700 text-white px-5 py-2 rounded-md hover:bg-green-800 transition"
@@ -95,7 +95,7 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
                         <div key={listing.id} className="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden border">
                             <div className="h-48 bg-gray-100 overflow-hidden">
                                 <Image
-                                    src={listing.uploaded_images?.[0]?.image || '/image/placeholder.png'}
+                                    src={listing.uploaded_images?.[0] ? listing.uploaded_images[0] : '/placeholder-image.png'}
                                     alt={listing.title}
                                     width={500}
                                     height={300}

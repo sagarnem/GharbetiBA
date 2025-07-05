@@ -12,19 +12,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex    bg-gray-100">
       {/* Sidebar */}
-      <UserSidebar />
-      <div
-        className={`flex flex-col flex-1 transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-20"
-        }`}
-      >
+
+      <div className="max-h-[calc(100vh-4rem)] sticky top-[4rem] left-0">
+        <UserSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      </div>
+      {/* Main Content Area */}
+   
         {/* Content Area */}
-        <main className="p-6 overflow-auto h-full">
+        <main className="  flex flex-col flex-1 transition-all duration-300 ">
           {children} {/* Render the content of the active route */}
         </main>
-      </div>
     </div>
   );
 }
