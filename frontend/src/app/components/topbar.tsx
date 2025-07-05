@@ -49,7 +49,7 @@ export default function Topbar() {
             {user ? (
               <>
                 <Link
-                  href="/post-ad"
+                  href="/user/create-post"
                   className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
                 >
                   <PlusCircle className="h-4 w-4" />
@@ -133,7 +133,7 @@ export default function Topbar() {
 
           {user ? (
             <>
-              <MobileNavLink href="/post-ad" className="text-blue-600 font-semibold">
+              <MobileNavLink href="/user/create-post" className="text-blue-600 font-semibold">
                 Post Your Ad
               </MobileNavLink>
               <MobileNavLink href="/profile">Profile</MobileNavLink>

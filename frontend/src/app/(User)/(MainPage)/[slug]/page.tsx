@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ContentDescription from "../Layouts/ContentDescription";
 import { useParams } from "next/navigation";
 import { Listing } from "@/types/listing";
-import { fetchListings } from "@/data/data";
+import { fetchListings } from "@/data/lib/api/roomApi";
 
 export default function RoomDetailPage() {
   const params = useParams();

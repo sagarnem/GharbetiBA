@@ -11,7 +11,7 @@ import FacebookComments from "./FacebookComment";
 import {
   CheckCircle,
   MapPin,
-  Smile,
+  // Smile,
   Phone,
   Eye,
   Share2,
@@ -21,7 +21,7 @@ import {
 import { useParams } from "next/navigation";
 import Image from "next/image";
 // import { Amenity } from "@/types/listing";
-import { Listing } from "@/types/listing";
+import { Amenity, Listing } from "@/types/listing";
 // interface ContentDescriptionProps {
 //   title: string;
 //   description: string[];
@@ -45,14 +45,30 @@ type SectionId =
   | "contact"
   | "facebook-comments";
 
+const getAmenityList = (amenities: Amenity) => {
+  if (!amenities) return [];
+
+  return [
+    { label: `Bedrooms: ${amenities.bedrooms}` },
+    { label: `Bathrooms: ${amenities.bathrooms}` },
+    { label: amenities.furnished ? "Furnished" : "Unfurnished" },
+    { label: amenities.parking ? "Parking Available" : "No Parking" },
+    { label: amenities.pets_allowed ? "Pets Allowed" : "No Pets" },
+    { label: amenities.Balcony ? "Balcony" : "No Balcony" },
+    { label: `Floor: ${amenities.rentalfloor}` },
+    { label: `Road Type: ${amenities.road_type}` },
+    { label: amenities.water_supply ? "Water Supply" : "No Water" },
+  ];
+};
+
 export default function ContentDescription({
   title,
-  images,
+  uploaded_images,
   description,
   location,
   amenities,
-  rentalTerms,
-  securityFacilities,
+  rentalTerms = [],
+  securityFacilities = [],
   price,
   availability,
   phone,
@@ -69,7 +85,15 @@ export default function ContentDescription({
     []
   );
   const url = useMemo(() => `${process.env.NEXT_PUBLIC_COMPANY_URL}/${slug}`, [slug]);
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const imageUrls = uploaded_images?.map(img => img.image) ?? [];
+  const [selectedImage, setSelectedImage] = useState(imageUrls[0]);
+  const amenityList = getAmenityList(amenities);
+
+  const paragraphs = Array.isArray(description)
+          ? description
+          : typeof description === "string"
+          ? description.split(/\n{2,}|\r?\n/)
+          : [];
 
   // Scroll handler with throttling
   const handleScroll = useCallback(() => {
@@ -174,9 +198,8 @@ export default function ContentDescription({
               : activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}
             <ChevronDown
               size={18}
-              className={`transition-transform ${
-                isMobileNavOpen ? "rotate-180" : ""
-              }`}
+              className={`transition-transform ${isMobileNavOpen ? "rotate-180" : ""
+                }`}
             />
           </button>
           <div className="w-10 h-10 flex items-center justify-center bg-orange-100 rounded-full text-orange-600">
@@ -196,11 +219,10 @@ export default function ContentDescription({
                     handleNavClick(e, id);
                     setIsMobileNavOpen(false);
                   }}
-                  className={`block w-full text-center px-3 py-2 rounded-md transition-all text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis ${
-                    activeSection === id
+                  className={`block w-full text-center px-3 py-2 rounded-md transition-all text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis ${activeSection === id
                       ? "bg-orange-500 text-white shadow-md"
                       : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
-                  }`}
+                    }`}
                 >
                   {id === "facebook-comments"
                     ? "FB Comments"
@@ -223,11 +245,10 @@ export default function ContentDescription({
                       handleNavClick(e, id);
                       setIsMobileNavOpen(false);
                     }}
-                    className={`block px-4 py-3 rounded-md transition-colors ${
-                      activeSection === id
+                    className={`block px-4 py-3 rounded-md transition-colors ${activeSection === id
                         ? "bg-orange-100 text-orange-600 font-semibold"
                         : "text-gray-700 hover:bg-gray-50"
-                    }`}
+                      }`}
                   >
                     {id === "facebook-comments"
                       ? "Facebook Comments"
@@ -242,52 +263,52 @@ export default function ContentDescription({
 
       {/* Content Sections */}
       <div className="px-4 py-2">
-             <div className="flex flex-col items-center bg-gray-50 h-full rounded overflow-hidden  relative">
-                  {/* Main Image */}
-                  <div className="w-full h-34 sm:h-50 aspect-video rounded overflow-hidden relative">
-                    <Image
-                      src={selectedImage}
-                      alt="Main"
-                      width={800}
-                      height={500}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition"></div>
-        
-                    {/* Thumbnail Selector - overlaid on bottom */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 bg-white/40 backdrop-blur-sm rounded px-2 py-1 overflow-x-auto max-w-[90%] no-scrollbar">
-                      {images.map((img, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedImage(img)}
-                          className={`w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden transition-all duration-200 
-                    ${
-                      selectedImage === img
-                        ? "border-2 border-orange-500 scale-110"
-                        : "border-2 border-transparent hover:border-gray-300 hover:scale-105"
+        <div className="flex flex-col items-center bg-gray-50 h-full rounded overflow-hidden  relative">
+          {/* Main Image */}
+          <div className="w-full h-34 sm:h-50 aspect-video rounded overflow-hidden relative">
+            <Image
+              src={selectedImage}
+              alt="Main"
+              width={800}
+              height={500}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition"></div>
+
+            {/* Thumbnail Selector - overlaid on bottom */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 bg-white/40 backdrop-blur-sm rounded px-2 py-1 overflow-x-auto max-w-[90%] no-scrollbar">
+              {imageUrls.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(img)}
+                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden transition-all duration-200 
+                    ${selectedImage === img
+                      ? "border-2 border-orange-500 scale-110"
+                      : "border-2 border-transparent hover:border-gray-300 hover:scale-105"
                     }
                   `}
-                          aria-label={`Select image ${i + 1}`}
-                        >
-                          <Image
-                            src={img}
-                            alt={`Thumbnail ${i + 1}`}
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-cover"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                  aria-label={`Select image ${i + 1}`}
+                >
+                  <Image
+                    src={img}
+                    alt={`Thumbnail ${i + 1}`}
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
         {/* Details Section */}
         <section id="details" className="scroll-mt-16">
           <h3 className="text-xl pt-4 font-extrabold text-gray-900 mb-4 pb-2 border-b border-gray-200">
             {title}
           </h3>
+
           <div className="space-y-4">
-            {description.map((para, i) => (
+            {paragraphs.map((para, i) => (
               <p
                 key={i}
                 className="text-gray-800 text-base sm:text-lg leading-relaxed"
@@ -296,6 +317,7 @@ export default function ContentDescription({
               </p>
             ))}
           </div>
+
         </section>
 
         {/* Location Section */}
@@ -315,12 +337,12 @@ export default function ContentDescription({
             Key Amenities
           </h4>
           <ul className="flex flex-wrap ">
-            {amenities.map(({ icon: Icon, label }, i) => (
+            {amenityList.map(({  label }, i) => (
               <li
                 key={i}
                 className="flex items-center gap-2  bg-orange-100 text-orange-700 px-2 mx-1 py-[2px] rounded-md font-normal w-fit"
               >
-                {Icon ? <Icon size={12} /> : <Smile size={12} />}
+                {/* {Icon ? <Icon size={12} /> : <Smile size={12} />} */}
 
                 <span>{label}</span>
               </li>

@@ -11,7 +11,7 @@ import { debounce } from "lodash";
 import { useParams, useRouter } from "next/navigation";
 import HeroSearchSection from "./Layouts/fancySearch";
 import { Listing } from "@/types/listing";
-import { fetchListings } from "@/data/data";
+import { fetchListings } from "@/data/lib/api/roomApi";
 import MobileFooterNav from "./Layouts/MobilefooterNav";
 import { Filter } from "lucide-react";
 const PAGE_SIZE = 10;

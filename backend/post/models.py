@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.text import slugify
 from multiselectfield import MultiSelectField
 User = settings.AUTH_USER_MODEL
 
@@ -62,9 +63,46 @@ class Post(models.Model):
         ('available', 'Available'),
         ('sold', 'Sold Out'),
     ], default='available')
+    slug = models.SlugField(max_length=300, unique=True, editable=False)
 
     def __str__(self):
         return self.title
+    
+    def _generate_slug_base(self) -> str:
+        """
+        Turn the title into a URL‑safe slug. Strip trailing dashes
+        so appending '-<id>' later looks clean.
+        """
+        return slugify(self.title).strip('-')
+
+    # ---------- main save override ----------
+    def save(self, *args, **kwargs):
+        # Create slug only if we don't have one yet OR the title changed
+        if not self.slug or self._state.adding or self.title_changed():
+            base_slug = self._generate_slug_base()
+
+            # First attempt: just the slugified title
+            tentative_slug = base_slug
+
+            # Does it already exist (other rows)?
+            if Post.objects.filter(slug=tentative_slug).exclude(pk=self.pk).exists():
+                # We need the primary‑key for uniqueness, so make sure we have it:
+                if not self.pk:
+                    super().save(*args, **kwargs)  # First save generates self.pk
+
+                # Append the id to guarantee uniqueness
+                tentative_slug = f"{base_slug}-{self.pk}"
+
+            self.slug = tentative_slug
+
+        super().save(*args, **kwargs)
+
+    # ---------- utility to detect title change ----------
+    def title_changed(self) -> bool:
+        if not self.pk:
+            return True  # new object
+        old_title = Post.objects.filter(pk=self.pk).values_list('title', flat=True).first()
+        return old_title != self.title
     
 
 class PostImage(models.Model):
