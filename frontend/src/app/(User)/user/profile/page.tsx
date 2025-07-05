@@ -73,6 +73,7 @@ if (
           router.push("/auth/login");
         } else {
           setIsEditing(false);
+
           toast.error("Failed to load profile");
         }
       }
@@ -154,7 +155,7 @@ if (
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
+    <div className="max-w-4xl mx-auto py-10 px-4 ">
       <h2 className="text-3xl font-semibold mb-8 text-center">
         {isEditing ? "Edit Profile" : "Create Profile"}
       </h2>

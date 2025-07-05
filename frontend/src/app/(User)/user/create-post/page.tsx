@@ -61,8 +61,8 @@ export default function PostForm() {
             for (let i = 0; i < data.images.length; i++) {
                 formData.append('images', data.images[i])
             }
-
-            const API_URL = 'http://localhost:8000/api/post/posts/'
+            const baseurl = process.env.NEXT_PUBLIC_API_URL // Adjust if needed
+            const API_URL = `${baseurl}/post/posts/`
             const token = localStorage.getItem('access_token')
 
             await axios.post(API_URL, formData, {

@@ -39,7 +39,7 @@ export default function RootLayout({
             <Topbar />
           </header>
 
-          <div className="min-h-[80vh] bg-gradient-to-b from-blue-100/95 to-orange-100 py-6">
+          <div className="min-h-[80vh] bg-gradient-to-b from-blue-100/95 to-orange-100 ">
             {children}
           </div>
 

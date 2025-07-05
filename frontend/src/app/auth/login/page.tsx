@@ -23,9 +23,10 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await axios.post<ApiResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user/login/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/login/`,
         data
       );
+
       const { access, refresh, user } = response.data;
 
       if (access && refresh) {
@@ -33,7 +34,7 @@ export default function Login() {
         localStorage.setItem("refresh_token", refresh);
         localStorage.setItem("user", JSON.stringify(user));
         toast.success("Login successful!");
-        router.push("/dashboard");
+        router.push("/user/profile");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;

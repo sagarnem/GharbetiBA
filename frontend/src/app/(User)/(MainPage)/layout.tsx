@@ -97,9 +97,9 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="max-w-[1320px] w-full mx-auto px-2 sm:px-4">
+    <div className="max-w-[1320px] w-full mx-auto px-2 sm:px-4 ">
       {/* Hero Section */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 mt-6">
         <div className=" w-full h-24 md:h-28 lg:h-32 flex items-center justify-center bg-gradient-to-r from-orange-100 to-orange-200 rounded-lg mb-2 shadow-sm">
           <p className="text-base md:text-lg font-medium text-orange-800">
             Your Banner Ad Here

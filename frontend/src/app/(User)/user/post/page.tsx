@@ -16,10 +16,10 @@ export default function ListingsDashboard() {
     const [totalPages, setTotalPages] = useState(1);
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
-    const BaseURL = "http://localhost:8000/api/"
+    const BaseURL = process.env.NEXT_PUBLIC_API_URL
         const fetchListings = async (page = 1) => {
             try {
-                const res = await fetch(`${BaseURL}post/posts/?page=${page}`, {
+                const res = await fetch(`${BaseURL}/post/posts/?page=${page}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`, // Or use cookies/session if SSR
                     },
@@ -43,7 +43,7 @@ export default function ListingsDashboard() {
 const deletePost = async (id: number, token: string | null) => {
   if (!token) return;
 
-  await fetch(`${BaseURL}post/posts/${id}/`, {
+  await fetch(`${BaseURL}/post/posts/${id}/`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,

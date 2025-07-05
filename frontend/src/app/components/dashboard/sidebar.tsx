@@ -11,7 +11,7 @@ interface UserSidebarProps {
 }
 
 const baseNavItems = [
-  { label: 'Dashboard', href: '#', icon: Home },
+  { label: 'Dashboard', href: '/user/post', icon: Home },
   { label: 'Add Your Property', href: '/user/create-post', icon: PlusCircle, roles: ['owner'] },
   { label: 'Property Listing', href: '/user/post', icon: List, roles: ['owner'] },
   { label: 'Wishlist', href: '/dashboard/wishlist', icon: Heart },
