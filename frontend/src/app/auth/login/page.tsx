@@ -34,7 +34,7 @@ export default function Login() {
         localStorage.setItem("refresh_token", refresh);
         localStorage.setItem("user", JSON.stringify(user));
         toast.success("Login successful!");
-        router.push("/user/profile");
+        location.replace("/user/profile");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;

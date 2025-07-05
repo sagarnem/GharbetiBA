@@ -1,36 +1,40 @@
-'use client';
-import { useAuth } from '@/context/AuthContext';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState, useRef, useEffect } from 'react';
-import {
-  Menu, X, PlusCircle, User, LogOut, Home, Heart
-} from 'lucide-react';
+"use client";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, PlusCircle, User, LogOut, Home, Heart } from "lucide-react";
 
 export default function Topbar() {
-  const { user,loading, logout } = useAuth();
-  
+  const { user, loading, logout } = useAuth();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   if (loading) return null;
-
+  const baseURL = "http://localhost:8000";
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left: Logo */}
-          <Link href="/" className="flex items-center gap-2 text-blue-600 font-bold text-lg">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-blue-600 font-bold text-lg"
+          >
             <Home className="w-5 h-5" />
             GharbetiBa
           </Link>
@@ -42,64 +46,75 @@ export default function Topbar() {
             <NavLink href="/how-gba-works">
               How <span className="underline text-orange-400">GBA</span> Works
             </NavLink>
-            <Link href="/wishlist" className="text-gray-600 hover:text-blue-600">
+            <Link
+              href="/wishlist"
+              className="text-gray-600 hover:text-blue-600"
+            >
               <Heart className="w-5 h-5" />
             </Link>
 
             {user ? (
-              <>
-                <Link
-                  href="/post-ad"
-                  className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
-                >
-                  <PlusCircle className="h-4 w-4" />
-                  <span className="hidden sm:inline">Post Your Ad</span>
-                </Link>
-
-                {/* User dropdown */}
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center gap-2 focus:outline-none"
-                    aria-haspopup="true"
-                    aria-expanded={isDropdownOpen}
+              (console.log(user),
+              (
+                <>
+                  <Link
+                    href="/post-ad"
+                    className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
                   >
-                    <span className="text-sm text-gray-800 font-medium hidden sm:inline">
-                      {user?.email.split('@')[0]}
-                    </span>
-                    <Image
-                      src={user?.avatar || '/default-avatar.png'}
-                      alt="User Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full border-2 border-blue-500 object-cover"
-                    />
-                  </button>
+                    <PlusCircle className="h-4 w-4" />
+                    <span className="hidden sm:inline">Post Your Ad</span>
+                  </Link>
 
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-md animate-fade-in z-50">
-                      <Link
-                        href="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        <User className="w-4 h-4" />
-                        View Profile
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Log Out
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
+                  {/* User dropdown */}
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="flex items-center gap-2 focus:outline-none"
+                      aria-haspopup="true"
+                      aria-expanded={isDropdownOpen}
+                    >
+                      <span className="text-sm text-gray-800 font-bold hidden sm:inline">
+                         {user?.full_name || user?.email.split('@')[0]}
+
+                      </span>
+                      <Image
+                        src={
+                          user?.avatar
+                            ? `${baseURL}${user.avatar}`
+                            : "/avatar.svg"
+                        }
+                        alt="User Avatar"
+                        width={32}
+                        height={32}
+                        className="w-8 h-8 rounded-full border-2 border-orange-500 object-cover"
+                      />
+                    </button>
+
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-md animate-fade-in z-50">
+                        <Link
+                          href="/user/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <User className="w-4 h-4" />
+                          View Profile
+                        </Link>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Log Out
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ))
             ) : (
               <div className="flex items-center gap-2">
                 <NavLink href="/auth/login">Sign In</NavLink>
@@ -119,7 +134,11 @@ export default function Topbar() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
       </nav>
@@ -133,7 +152,10 @@ export default function Topbar() {
 
           {user ? (
             <>
-              <MobileNavLink href="/post-ad" className="text-blue-600 font-semibold">
+              <MobileNavLink
+                href="/post-ad"
+                className="text-blue-600 font-semibold"
+              >
                 Post Your Ad
               </MobileNavLink>
               <MobileNavLink href="/profile">Profile</MobileNavLink>
@@ -157,7 +179,13 @@ export default function Topbar() {
 }
 
 // Reusable NavLink for cleaner structure
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
     <Link
       href={href}
@@ -171,7 +199,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 function MobileNavLink({
   href,
   children,
-  className = '',
+  className = "",
 }: {
   href: string;
   children: React.ReactNode;

@@ -111,6 +111,8 @@ class LoginView(APIView):
                 "user": {
                     "email": user.email,
                     "role": user.role,
+                    'avatar': user.profile.photo.url if hasattr(user, 'profile') and user.profile.photo else None,
+                    "full_name": user.profile.full_name if hasattr(user, 'profile') else None,
                 }
             })
         else:

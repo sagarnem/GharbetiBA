@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 
 interface FacebookCommentsProps {
-  url: string; // URL to attach comments to
+  url: string;
   width?: string;
   numPosts?: number;
 }

@@ -8,8 +8,8 @@ interface User {
   id: number;
   email: string;
   name: string;
-  avatar?: string;
-}
+  avatar:string ;
+  full_name: string;}
 interface AuthContextType {
   user: User | null;
   loading: boolean;

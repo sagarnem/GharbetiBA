@@ -24,7 +24,7 @@ const ContactPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -105,8 +105,8 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Phone</h3>
-                    <p className="text-gray-600">+977-1-1234567</p>
-                    <p className="text-gray-600">+977-9801234567 (WhatsApp)</p>
+                    <p className="text-gray-600">+977-9842803777</p>
+                    <p className="text-gray-600">+977-9842803777 (WhatsApp)</p>
                   </div>
                 </div>
 
@@ -128,7 +128,7 @@ const ContactPage = () => {
                   <div>
                     <h3 className="font-semibold text-gray-800">Office</h3>
                     <p className="text-gray-600">Gharbhetiba Pvt. Ltd.</p>
-                    <p className="text-gray-600">New Baneshwor, Kathmandu</p>
+                    <p className="text-gray-600">Dhobhighar, Lalitpur</p>
                     <p className="text-gray-600">Nepal</p>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ const ContactPage = () => {
                 <h3 className="font-semibold text-gray-800 mb-3">Emergency Support</h3>
                 <p className="text-gray-600 mb-4">For urgent property-related issues outside business hours:</p>
                 <button className="bg-red-100 text-red-600 px-4 py-2 rounded-lg font-medium">
-                  Call Emergency: +977-980-9876543
+                  Call Emergency: +977-9842803777
                 </button>
               </div>
             </motion.div>
@@ -288,29 +288,13 @@ const ContactPage = () => {
                 <div className="text-center">
                   <div className="text-4xl mb-4">📍</div>
                   <p className="text-gray-600">Gharbhetiba Office Location Map</p>
-                  <p className="text-sm text-gray-500 mt-2">New Baneshwor, Kathmandu, Nepal</p>
+                  <p className="text-sm text-gray-500 mt-2">Dhobhighat, Lalitpur, Nepal</p>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* FAQ CTA */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            variants={fadeIn}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mt-16 text-center"
-          >
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Have Questions?</h2>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Check out our FAQ section for quick answers to common questions about renting, listing properties, and using our platform.
-            </p>
-            <button className="border border-green-600 text-green-600 hover:bg-green-50 font-medium py-3 px-8 rounded-lg transition-colors">
-              Visit Help Center
-            </button>
-          </motion.div>
+          
         </div>
       </div>
     </>
