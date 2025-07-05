@@ -1,11 +1,18 @@
 // types/listing.ts
-
-import { LucideIcon } from "lucide-react";
-
+import { LucideIcon } from 'lucide-react';
 export interface Amenity {
-  label: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  furnished?: boolean;
+  parking?: boolean;
+  pets_allowed?: boolean;
+  Balcony?: boolean;
+  rentalfloor?: string | number;
+  road_type?: string;
+  water_supply?: boolean;
   icon?: LucideIcon | null;
 }
+
 
 export interface Listing {
   id: number;
@@ -14,13 +21,12 @@ export interface Listing {
   location: string;
   price: string;
   phone: string;
-  uploaded_images: string[];
-  description: string[];             // array of description paragraphs
-  amenities: Amenity[];
+  uploaded_images: { id: number; image: string }[];
+  description: string | string[];             // array of description paragraphs
+  amenities: Amenity;
   rentalTerms: string[];
   securityFacilities: string[];
   availability: string;
   contactNote: string;
   created_at: string;
-  images: string[];
 }

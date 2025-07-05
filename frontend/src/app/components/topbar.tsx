@@ -54,16 +54,14 @@ export default function Topbar() {
             </Link>
 
             {user ? (
-              (console.log(user),
-              (
-                <>
-                  <Link
-                    href="/post-ad"
-                    className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                    <span className="hidden sm:inline">Post Your Ad</span>
-                  </Link>
+              <>
+                <Link
+                  href="/user/create-post"
+                  className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  <span className="hidden sm:inline">Post Your Ad</span>
+                </Link>
 
                   {/* User dropdown */}
                   <div className="relative" ref={dropdownRef}>
@@ -114,7 +112,7 @@ export default function Topbar() {
                     )}
                   </div>
                 </>
-              ))
+              
             ) : (
               <div className="flex items-center gap-2">
                 <NavLink href="/auth/login">Sign In</NavLink>
@@ -152,10 +150,7 @@ export default function Topbar() {
 
           {user ? (
             <>
-              <MobileNavLink
-                href="/post-ad"
-                className="text-blue-600 font-semibold"
-              >
+              <MobileNavLink href="/user/create-post" className="text-blue-600 font-semibold">
                 Post Your Ad
               </MobileNavLink>
               <MobileNavLink href="/profile">Profile</MobileNavLink>

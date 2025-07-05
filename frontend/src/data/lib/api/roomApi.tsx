@@ -1,29 +1,16 @@
-"use client";
-import React from 'react'
-import { useEffect, useState } from "react";
-import { fetchListings } from "../../data"; // Adjust path if needed
-import { Listing } from "@/types/listing";
+// data/lib/api/roomApi.tsx
+import { Listing } from '@/types/listing';
 
-export default function ListingsClientPage() {
-  const [listings, setListings] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(true);
+const API = process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8000/api';
 
-  useEffect(() => {
-    fetchListings().then((data) => {
-      setListings(data);
-      setLoading(false);
-    });
-  }, []);
+export async function fetchListings(): Promise<Listing[]> {
+  const res = await fetch(`${API}/post/active-posts/`, {
+    next: { revalidate: 60 },
+  });
+  console.log('Fetching listings from:', `${API}/post/active-posts/`);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <div>
-      {listings.map((l) => (
-        <div key={l.slug}>{l.title}</div>
-      ))}
-    </div>
-  );
+  if (!res.ok) throw new Error('Failed to fetch listings');
+  console.log('Response status:', res.status);
+  const data = await res.json();
+  return data.results;
 }

@@ -71,7 +71,7 @@ class PostSerializer(serializers.ModelSerializer):
             'id', 'owner', 'title', 'description', 'price', 'location',
             'rental_term', 'near_by', 'category', 'status', 'is_active',
             'created_at', 'updated_at', 'amenities', 'images',
-            'uploaded_images', 'comments'
+            'uploaded_images', 'comments', 'slug'
         ]
         read_only_fields = ['owner', 'created_at', 'updated_at', 'uploaded_images', 'comments']
 
