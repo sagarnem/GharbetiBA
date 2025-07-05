@@ -5,13 +5,34 @@ import { useForm, Controller } from 'react-hook-form'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Home, Building2 } from "lucide-react";
+interface FormValues {
+  title: string;
+  description: string;
+  price: string;
+  location: string;
+  category: string;
+  status: string;
+  near_by: string[];
+  rental_term: string;
+  is_active: boolean;
+  bedrooms: string;
+  bathrooms: string;
+  furnished: boolean;
+  parking: boolean;
+  pets_allowed: boolean;
+  Balcony: boolean;
+  rentalfloor: string;
+  road_type: string;
+  water_supply: boolean;
+  images: File[];
+}
 
 export default function PostForm() {
-    const { register, handleSubmit, reset, control, formState: { errors } } = useForm()
+    const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormValues>()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [formType, setFormType] = useState<'residential' | 'commercial' | null>(null)
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: FormValues) => {
         setIsSubmitting(true)
         try {
             const formData = new FormData()
@@ -276,7 +297,7 @@ export default function PostForm() {
                                                             if (e.target.checked) {
                                                                 field.onChange([...field.value, option.value]);
                                                             } else {
-                                                                field.onChange(field.value.filter((v) => v !== option.value));
+                                                                field.onChange(field.value.filter((v: string) => v !== option.value));
                                                             }
                                                         }}
                                                         className="form-checkbox"
@@ -442,13 +463,30 @@ export default function PostForm() {
                                             className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
                                         >
                                             <span>Upload files</span>
-                                            <input
+                                            {/* <input
                                                 {...register('images')}
                                                 id="images"
                                                 type="file"
                                                 multiple
                                                 className="sr-only"
-                                            />
+                                            /> */}
+<Controller
+  control={control}
+  name="images"
+  defaultValue={[]}
+  render={({ field }) => (
+    <input
+      type="file"
+      multiple
+      onChange={(e) => {
+        const files = e.target.files ? Array.from(e.target.files) : []
+        field.onChange(files)
+      }}
+    />
+  )}
+/>
+
+
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>

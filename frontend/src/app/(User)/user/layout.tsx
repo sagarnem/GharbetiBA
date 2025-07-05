@@ -14,7 +14,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <UserSidebar />
+      <UserSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
+      {/* Main Content Area */}
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-20"

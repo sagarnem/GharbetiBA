@@ -81,7 +81,7 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
                 <div className="text-center text-gray-600">Loading listings...</div>
             ) : listings.length === 0 ? (
                 <div className="text-center text-gray-700 border border-dashed border-gray-300 rounded-md p-10">
-                    <p className="mb-4">You don't have any listings yet.</p>
+                    <p className="mb-4">You don&apos;t have any listings yet.</p>
                     <Link
                         href="/user/create-post"
                         className="inline-block bg-green-700 text-white px-5 py-2 rounded-md hover:bg-green-800 transition"
@@ -95,7 +95,7 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
                         <div key={listing.id} className="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden border">
                             <div className="h-48 bg-gray-100 overflow-hidden">
                                 <Image
-                                    src={listing.uploaded_images?.[0]?.image || '/image/placeholder.png'}
+                                    src={listing.uploaded_images?.[0] ? listing.uploaded_images[0] : '/placeholder-image.png'}
                                     alt={listing.title}
                                     width={500}
                                     height={300}

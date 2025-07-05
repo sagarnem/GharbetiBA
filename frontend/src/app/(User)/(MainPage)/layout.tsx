@@ -89,6 +89,8 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     router.replace(`/${encodeURIComponent(listing.slug)}`, {
       scroll: false,
     });
+    setModalOpen(true);
+
     if (window.innerWidth < 768) {
       setModalOpen(true);
     }
@@ -140,9 +142,9 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
           </div>
 
           {/* Main Detail View - Desktop */}
-          <div className="hidden md:block sticky top-28 self-start h-fit max-h-[80vh]">
+          {/* <div className="hidden md:block sticky top-28 self-start h-fit max-h-[80vh]">
             {children}
-          </div>
+          </div> */}
         </div>
 
         {/* Modal for Mobile */}

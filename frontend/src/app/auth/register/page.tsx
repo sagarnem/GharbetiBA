@@ -38,7 +38,7 @@ export default function Register() {
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(
-        axiosError.response?.data?.email?.[0] ||
+          axiosError.response?.data?.message ||
         'Registration failed. Please try again.'
       );
     } finally {

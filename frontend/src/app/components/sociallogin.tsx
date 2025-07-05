@@ -5,14 +5,14 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebookF } from "react-icons/fa";
-
+// import { FcGoogle } from "react-icons/fc";
+// import { FaFacebookF } from "react-icons/fa";
+import { CredentialResponse } from "@react-oauth/google";
 export default function SocialLogin() {
     const router = useRouter();
     const [selectedRole, setSelectedRole] = useState("tenant");
 
-    const handleGoogleSuccess = async (credentialResponse: any) => {
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         try {
             const { credential: id_token } = credentialResponse;
 
@@ -39,34 +39,34 @@ export default function SocialLogin() {
         }
     };
 
-    const handleFacebookResponse = async (response: any) => {
-        try {
-            const { accessToken } = response;
-            const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/user/auth/social/facebook/`,
-                {
-                    access_token: accessToken,
-                    role: selectedRole,
-                    provider: "facebook",
-                }
-            );
+    // const handleFacebookResponse = async (response: any) => {
+    //     try {
+    //         const { accessToken } = response;
+    //         const res = await axios.post(
+    //             `${process.env.NEXT_PUBLIC_API_URL}/user/auth/social/facebook/`,
+    //             {
+    //                 access_token: accessToken,
+    //                 role: selectedRole,
+    //                 provider: "facebook",
+    //             }
+    //         );
 
-            const data = res.data;
+    //         const data = res.data;
 
-            if (data.otp_required) {
-                router.push(`/auth/verify-otp?email=${data.email}&purpose=social_login`);
-                toast.info("OTP verification required");
-            } else {
-                localStorage.setItem("access_token", data.access);
-                localStorage.setItem("refresh_token", data.refresh);
-                toast.success("Logged in with Facebook");
-                router.push("/dashboard");
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("Facebook login failed");
-        }
-    };
+    //         if (data.otp_required) {
+    //             router.push(`/auth/verify-otp?email=${data.email}&purpose=social_login`);
+    //             toast.info("OTP verification required");
+    //         } else {
+    //             localStorage.setItem("access_token", data.access);
+    //             localStorage.setItem("refresh_token", data.refresh);
+    //             toast.success("Logged in with Facebook");
+    //             router.push("/dashboard");
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //         toast.error("Facebook login failed");
+    //     }
+    // };
 
 
     return (

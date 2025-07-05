@@ -19,10 +19,10 @@ const AboutUs = () => {
   return (
     <>
       <Head>
-        <title>About Gharbhetiba - Nepal's Trusted Rental Platform</title>
+        <title>About Gharbhetiba - Nepal&apos;s Trusted Rental Platform</title>
         <meta
           name="description"
-          content="Discover Gharbhetiba.com - Nepal's premier rental platform connecting tenants with verified properties across Kathmandu, Pokhara, and more."
+          content="Discover Gharbhetiba.com - Nepal&apos;s premier rental platform connecting tenants with verified properties across Kathmandu, Pokhara, and more."
         />
       </Head>
 
@@ -46,7 +46,7 @@ const AboutUs = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-xl max-w-3xl mx-auto"
             >
-              Nepal's trusted platform for finding, listing, and managing rental
+              Nepal&apos;s trusted platform for finding, listing, and managing rental
               and real estate properties
             </motion.p>
           </div>
@@ -63,7 +63,7 @@ const AboutUs = () => {
         >
           <div className="bg-white rounded-xl shadow-md p-8 text-center max-w-4xl mx-auto">
             <p className="text-gray-600 text-lg mb-6">
-              Whether you're looking for a cozy apartment in Kathmandu, a shared
+              Whether you&apos;re looking for a cozy apartment in Kathmandu, a shared
               room in Pokhara, or a commercial space in Lalitpur, we make
               property search simple, transparent, and fast.
             </p>
@@ -233,7 +233,7 @@ const AboutUs = () => {
           className="container mx-auto px-4 py-20 text-center"
         >
           <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Let's Make Property Search Stress-Free
+            Let&apos;re looking for a cozy apartment in Kathmandu, a shareds Make Property Search Stress-Free
           </h2>
           <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
             Join thousands of satisfied users who found their perfect property
@@ -248,7 +248,7 @@ const AboutUs = () => {
             </button>
           </div>
           <div className="mt-12 text-gray-500 font-medium">
-            Gharbhetiba.com — Nepal's Rental Solution
+            Gharbhetiba.com — Nepal&apos&apos;re looking for a cozy apartment in Kathmandu, a shareds Rental Solution
           </div>
         </motion.section>
       </div>

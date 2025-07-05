@@ -68,7 +68,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000',]
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000','https://gharbhetiba.mantracodex.com']
 CORS_ALLOW_HEADERS = [
     'x-api-key',  # Allow X-API-KEY header
     'content-type',

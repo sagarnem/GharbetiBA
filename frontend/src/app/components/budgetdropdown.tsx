@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DollarSign } from "lucide-react";
 
 const budgetOptions = [
@@ -8,13 +8,18 @@ const budgetOptions = [
   { value: "above_20000", label: "Above Rs. 20,000" },
 ];
 
-function BudgetDropdown({ value, onChange }) {
+interface BudgetDropdownProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function BudgetDropdown({ value, onChange }: BudgetDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    function onClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    function onClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -22,12 +27,12 @@ function BudgetDropdown({ value, onChange }) {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  const handleSelect = (val) => {
+  const handleSelect = (val: string) => {
     onChange(val);
     setIsOpen(false);
   };
 
-  const getLabel = (val) => {
+  const getLabel = (val: string) => {
     const option = budgetOptions.find((opt) => opt.value === val);
     return option ? option.label : "Budget";
   };
@@ -44,8 +49,9 @@ function BudgetDropdown({ value, onChange }) {
         <DollarSign className="text-orange-500 w-4 h-4" />
         <span className="flex-grow truncate">{getLabel(value)}</span>
         <svg
-          className={`w-5 h-5 text-gray-500 transition-transform duration-200 ease-in-out ${isOpen ? "rotate-180" : ""
-            }`}
+          className={`w-5 h-5 text-gray-500 transition-transform duration-200 ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
@@ -64,7 +70,11 @@ function BudgetDropdown({ value, onChange }) {
               onClick={() => handleSelect(val)}
               type="button"
               className={`w-full px-4 py-2 text-left text-sm transition
-                ${value === val ? "text-sm font-semibold mb-3 text-gray-900 tracking-wide uppercase items-center" : "hover:bg-orange-100 hover:text-orange-600 text-gray-700"}
+                ${
+                  value === val
+                    ? "text-sm font-semibold mb-3 text-gray-900 tracking-wide uppercase items-center"
+                    : "hover:bg-orange-100 hover:text-orange-600 text-gray-700"
+                }
                 focus:outline-none focus:ring-2 focus:ring-orange-400`}
             >
               {label}

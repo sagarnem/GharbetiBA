@@ -22,4 +22,5 @@ export interface Listing {
   availability: string;
   contactNote: string;
   created_at: string;
+  images: string[];
 }

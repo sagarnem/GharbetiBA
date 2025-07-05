@@ -113,6 +113,8 @@ class LoginView(APIView):
                     "role": user.role,
                 }
             })
+        else:
+            print("Login serializer errors:", serializer.errors)
         return Response(serializer.errors, status=400)
 class RequestPasswordResetView(APIView):
     def post(self, request):

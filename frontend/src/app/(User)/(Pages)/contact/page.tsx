@@ -14,14 +14,14 @@ const ContactPage = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
+  const [submitStatus, setSubmitStatus] = useState<string | null>(null);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -37,6 +37,10 @@ const ContactPage = () => {
         message: ''
       });
     } catch (error) {
+      if (error instanceof Error) {
+        console.error('Form submission error:', error.message);
+      }
+      // Handle error case
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -51,7 +55,7 @@ const ContactPage = () => {
   return (
     <>
       <Head>
-        <title>Contact Gharbhetiba - Nepal's Premier Rental Platform</title>
+        <title>Contact Gharbhetiba - Nepal&apos;s Premier Rental Platform</title>
         <meta name="description" content="Get in touch with Gharbhetiba.com for property inquiries, support, or partnership opportunities across Nepal." />
       </Head>
 
@@ -75,7 +79,7 @@ const ContactPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-xl max-w-3xl mx-auto"
             >
-              We're here to help with all your rental and property needs in Nepal
+              We&apos;re here to help with all your rental and property needs in Nepal
             </motion.p>
           </div>
         </div>
@@ -163,7 +167,7 @@ const ContactPage = () => {
               
               {submitStatus === 'success' && (
                 <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">
-                  Thank you! Your message has been sent successfully. We'll get back to you soon.
+                  Thank you! Your message has been sent successfully. We&apos;ll get back to you soon.
                 </div>
               )}
 
@@ -240,7 +244,7 @@ const ContactPage = () => {
                     <textarea
                       id="message"
                       name="message"
-                      rows="5"
+                      rows={5}
                       value={formData.message}
                       onChange={handleChange}
                       required
