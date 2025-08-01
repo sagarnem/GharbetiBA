@@ -126,7 +126,7 @@ const ContentCard = ({ title, location, price, uploaded_images, amenities }: Lis
           <div className="flex sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-5 border-t border-gray-200 pt-1">
             <div>
               <p className="text-sm sm:text-base font-bold text-green-700">
-                {price}
+                Rs. {price}
               </p>
               {/* <p className="text-[11px] sm:text-xs text-gray-500">
                 Available Now

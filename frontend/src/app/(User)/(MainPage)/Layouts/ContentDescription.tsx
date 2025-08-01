@@ -373,7 +373,7 @@ export default function ContentDescription({
           </h4>
           <div className="bg-green-50 p-4 rounded-lg">
             <p className="font-bold text-green-700 text-lg sm:text-xl mb-1">
-              {price}
+              Rs. {price}
             </p>
             <p className="text-sm text-gray-600">{availability}</p>
           </div>
