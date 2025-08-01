@@ -7,13 +7,14 @@ import Image from 'next/image';
 import Pagination from '@/app/components/ui/pagination';
 import ConfirmModal from "../../../components/ui/ConfirmModal";
 import { useConfirmDelete } from "@/hooks/useConfirmDelete";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
 
 export default function ListingsDashboard() {
     const [listings, setListings] = useState<Listing[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [editingListing, setEditingListing] = useState<Listing | null>(null);
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
     const BaseURL = process.env.NEXT_PUBLIC_API_URL
@@ -58,6 +59,35 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
     await deletePost(id, token);
     refetch();
   });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!editingListing) return;
+    setEditingListing({
+      ...editingListing,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleUpdate = async () => {
+    if (!editingListing || !token) return;
+
+    try {
+      const res = await fetch(`${BaseURL}/post/posts/${editingListing.id}/`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editingListing),
+      });
+      if (!res.ok) throw new Error("Failed to update post");
+      setEditingListing(null);
+      refetch();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
 
     return (
@@ -109,7 +139,7 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
                                 <div className="mt-4 flex justify-between items-center">
                                     <span className="text-xs text-gray-500">{new Date(listing.created_at).toLocaleDateString()}</span>
                                     <div><button
-                    // onClick={() => }
+                    onClick={() => setEditingListing(listing)}
                     className="text-blue-600 hover:text-blue-800 transition"
                   >
                     <Pencil size={16} />
@@ -143,7 +173,54 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
           onCancel={cancelDelete}
         />
       </div>
-
+{editingListing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-xl relative">
+            <button
+              onClick={() => setEditingListing(null)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            >
+              <X size={20} />
+            </button>
+            <h2 className="text-xl font-semibold mb-4">Edit Listing</h2>
+            <input
+              name="title"
+              value={editingListing.title}
+              onChange={handleInputChange}
+              className="w-full mb-3 p-2 border rounded"
+              placeholder="Title"
+            />
+            <textarea
+              name="description"
+              value={editingListing.description}
+              onChange={handleInputChange}
+              className="w-full mb-3 p-2 border rounded"
+              placeholder="Description"
+            />
+            <input
+              name="price"
+              value={editingListing.price || ""}
+              onChange={handleInputChange}
+              className="w-full mb-3 p-2 border rounded"
+              placeholder="Price"
+              type="number"
+            />
+            <input
+              name="location"
+              value={editingListing.location || ""}
+              onChange={handleInputChange}
+              className="w-full mb-3 p-2 border rounded"
+              placeholder="Location"
+            />
+            <button
+              onClick={handleUpdate}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Update Listing
+            </button>
+          </div>
+        </div>
+      )}
         </div>
     );
 }
