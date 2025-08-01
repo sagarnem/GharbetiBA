@@ -25,7 +25,7 @@ export default function Topbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   if (loading) return null;
-  const baseURL = "http://localhost:8000";
+  const baseURL =process.env.NEXT_PUBLIC_API_DMN;
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

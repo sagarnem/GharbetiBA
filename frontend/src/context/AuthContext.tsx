@@ -78,7 +78,6 @@ const socialLogin = (userData: User, access: string, refresh: string) => {
 
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-    // console.log('User logged in:', userData);
     router.push('/dashboard');
   };
 

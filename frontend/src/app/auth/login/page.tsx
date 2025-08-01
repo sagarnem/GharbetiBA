@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -11,7 +11,7 @@ import { LoginFormData, ApiResponse } from "@/types/auth";
 import SocialLogin from "../../components/sociallogin";
 
 export default function Login() {
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {
     register,

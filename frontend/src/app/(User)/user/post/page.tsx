@@ -95,7 +95,7 @@ const { showConfirm, handleDelete, confirmDelete, cancelDelete } =
                         <div key={listing.id} className="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden border">
                             <div className="h-48 bg-gray-100 overflow-hidden">
                                 <Image
-                                    src={listing.uploaded_images?.[0] ? listing.uploaded_images[0] : '/placeholder-image.png'}
+                                    src={`${listing.uploaded_images?.[0] ? listing.uploaded_images[0] : '/placeholder-image.png'}`}
                                     alt={listing.title}
                                     width={500}
                                     height={300}

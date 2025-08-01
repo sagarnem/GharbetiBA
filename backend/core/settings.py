@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','api.gharbhetiba.mantracodex.com', 'localhost', 'ui.gharbhetiba.mantracodex.com', 'gharbhetiba.mantracodex.com' ]
 
 
 # Application definition
@@ -69,9 +69,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000','https://gharbhetiba.mantracodex.com']
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000','https://gharbhetiba.mantracodex.com', 'https://ui.gharbhetiba.mantracodex.com', ]
 CORS_ALLOW_HEADERS = [
-    'x-api-key',  # Allow X-API-KEY header
+    'x-api-key',  
     'content-type',
     'authorization',
 ]

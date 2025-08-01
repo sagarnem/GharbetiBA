@@ -45,7 +45,7 @@ api.interceptors.response.use(
         return axios(originalRequest);
       } catch (error) {
         // If refresh fails, logout the user
-        console.log('Refresh token failed, logging out...');
+        // console.log('Refresh token failed, logging out...');
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';
